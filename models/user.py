@@ -15,7 +15,9 @@ class User(Base):
 
     password = Column(String, nullable=False)
 
-    role = Column(String, nullable=False)  # admin / creator / investor
+    role = Column(String, nullable=False)  # creator / investor
+
+    
 
     # 👇 NEW IMPORTANT FIELDS
 
