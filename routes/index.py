@@ -3,7 +3,6 @@ from fastapi.responses import HTMLResponse
 from fastapi.templating import Jinja2Templates
 
 router = APIRouter()
-
 templates = Jinja2Templates(directory="templates")
 
 
@@ -12,5 +11,5 @@ async def home(request: Request):
     return templates.TemplateResponse(
         request=request,
         name="home/index.html",
-        context={}
+        context={},
     )
