@@ -1,4 +1,6 @@
-/* General Setup */
+/* ============================================================
+   GENERAL SETUP
+   ============================================================ */
 body {
   font-family: 'Poppins', sans-serif;
   background: radial-gradient(circle at center, #0F0F0F 0%, #000000 100%);
@@ -10,13 +12,14 @@ body {
   scroll-behavior: smooth;
 }
 
-/* Main container for seamless sections */
 .main-container {
   background: transparent;
   min-height: 200vh;
 }
 
-/* Navbar */
+/* ============================================================
+   NAVBAR
+   ============================================================ */
 .navbar {
   background: #dcdbd9;
   backdrop-filter: blur(10px);
@@ -31,19 +34,24 @@ body {
   left: 0;
   right: 0;
   z-index: 1000;
-  transition:  background 1s ease, color 1s ease;
+  transition: background 1s ease, color 1s ease;
 }
 
 .navbar.scrolled {
-  background: rgba(0, 0, 0, 0.98);
-  box-shadow: 0 4px 25px rgba(0,0,0,0.15);
+  background-color: #111;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.15);
+  color: white;
 }
 
 .logo {
-  color: #000000;
   font-weight: 700;
   font-size: 1.4rem;
   letter-spacing: 1px;
+  color: #000000;
+}
+
+.navbar.scrolled .logo {
+  color: white;
 }
 
 .nav-links {
@@ -66,12 +74,20 @@ body {
   padding: 5px 10px;
 }
 
+.navbar.scrolled .nav-link {
+  color: white;
+}
+
+.navbar.scrolled .nav-link:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: white;
+}
+
 .nav-actions {
   display: flex;
   gap: 10px;
 }
 
-/* Logo styles */
 .navbar-logo {
   height: 50px;
   width: auto;
@@ -82,19 +98,6 @@ body {
   filter: brightness(500%) contrast(150%);
 }
 
-
-/* Light-themed navbar (white bg) */
-.navbar.light .navbar-logo {
-  content: url("static/images/logo_black.png");
-}
-
-/* Dark-themed navbar (black bg) */
-.navbar.dark .navbar-logo {
-  content: url("static/images/logo_white.png");
-}
-
-
-/* Login */
 .nav-button {
   padding: 8px 18px;
   border-radius: 6px;
@@ -108,20 +111,6 @@ body {
   border-color: rgba(255, 255, 255, 0.51);
   color: #000000;
 }
-/* After Scroll (Black Navbar) */
-.navbar.scrolled {
-  background-color: #111;
-  color: white;
-}
-
-.navbar.scrolled .nav-link {
-  color: white;
-}
-
-.navbar.scrolled .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
-}
 
 .navbar.scrolled .nav-button {
   color: white;
@@ -133,7 +122,6 @@ body {
   color: black;
 }
 
-/* Sign Up */
 .nav-button.filled {
   background-color: #000000;
   border-radius: 6px;
@@ -149,6 +137,9 @@ body {
   color: #000000;
 }
 
+/* ============================================================
+   HERO SECTION
+   ============================================================ */
 .hero-section {
   min-height: 100vh;
   display: flex;
@@ -156,7 +147,7 @@ body {
   align-items: center;
   padding: 80px 20px 0px;
   position: relative;
-  background: linear-gradient(to bottom, #444, #000);  /* Grey to black */
+  background: linear-gradient(to bottom, #444, #000);
   margin: 0;
   z-index: 1;
 }
@@ -232,8 +223,6 @@ body {
   margin-bottom: 30px;
 }
 
-
-/* Get Started Button */
 .btn-outline {
   background-color: transparent;
   color: #ffffff;
@@ -287,7 +276,9 @@ body {
   transition: left 0.5s;
 }
 
-/* About Neurona Section 2 */
+/* ============================================================
+   ABOUT SECTION
+   ============================================================ */
 .about-section {
   background: #FFFFFF;
   min-height: 100vh;
@@ -499,7 +490,10 @@ body {
   text-transform: uppercase;
   letter-spacing: 1px;
 }
-/* How Neurona Helps Section */
+
+/* ============================================================
+   HOW NEURONA HELPS SECTION
+   ============================================================ */
 .how-neurona-helps-section {
   background: linear-gradient(135deg, #142132 0%, #142132 50%, #142132 100%);
   min-height: 100vh;
@@ -532,7 +526,7 @@ body {
   z-index: 2;
 }
 
-/* How It Works Section (Left Side) */
+/* Left Side: How It Works */
 .how-it-works-section {
   padding-right: 2rem;
 }
@@ -658,6 +652,7 @@ body {
   transform: scale(1.1);
   background: rgba(255, 255, 255, 0.3);
 }
+
 .slide-text {
   height: 35%;
   padding: 2rem;
@@ -777,7 +772,7 @@ body {
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* How Neurona Helps You Section (Right Side) */
+/* Right Side: How Neurona Helps You */
 .how-neurona-helps-content {
   padding-left: 2rem;
 }
@@ -906,7 +901,9 @@ body {
   left: 100%;
 }
 
-/* New Professional Blank White Section */
+/* ============================================================
+   BLANK WHITE SECTION (CTA)
+   ============================================================ */
 .blank-white-section {
   background: #ffffff;
   min-height: 60vh;
@@ -1007,124 +1004,10 @@ body {
   transform: translateY(-3px);
   box-shadow: 0 12px 40px rgba(100, 116, 139, 0.25);
 }
-/* Responsive Design for How Neurona Helps Section */
-@media (max-width: 768px) {
-  .how-neurona-helps-section {
-    padding: 60px 0;
-  }
 
-  .how-it-works-section,
-  .how-neurona-helps-content {
-    padding-left: 0;
-    padding-right: 0;
-    margin-bottom: 3rem;
-  }
-
-  .how-it-works-title,
-  .helps-title {
-    font-size: 2.2rem;
-    text-align: center;
-  }
-
-  .how-it-works-title::after,
-  .helps-title::after {
-    left: 50%;
-    transform: translateX(-50%);
-  }
-
-  .slide-wrapper {
-    height: 380px;
-  }
-
-  .slide-text {
-    padding: 1.5rem;
-  }
-
-  .slide-title {
-    font-size: 1.4rem;
-  }
-
-  .slide-description {
-    font-size: 0.9rem;
-  }
-
-  .slide-features {
-    flex-wrap: wrap;
-  }
-
-  .slide-navigation {
-    flex-direction: column;
-    gap: 8px;
-  }
-
-  .benefit-item {
-    flex-direction: column;
-    text-align: center;
-    gap: 1rem;
-  }
-
-  .cta-section {
-    text-align: center;
-  }
-
-  .blank-title {
-    font-size: 2.5rem;
-  }
-
-  .blank-subtitle {
-    font-size: 1.2rem;
-  }
-
-  .blank-cta {
-    flex-direction: column;
-    align-items: center;
-  }
-}
-
-@media (max-width: 576px) {
-  .how-it-works-title,
-  .helps-title {
-    font-size: 2rem;
-  }
-
-  .slide-wrapper {
-    height: 320px;
-  }
-
-  .slide-text {
-    padding: 1rem;
-  }
-
-  .slide-overlay .slide-icon {
-    width: 50px;
-    height: 50px;
-    font-size: 20px;
-  }
-
-  .slide-title {
-    font-size: 1.2rem;
-  }
-
-  .benefit-item {
-    padding: 1.5rem;
-  }
-
-  .benefit-icon {
-    width: 48px;
-    height: 48px;
-    font-size: 18px;
-  }
-
-  .blank-title {
-    font-size: 2rem;
-  }
-
-  .blank-subtitle {
-    font-size: 1.1rem;
-  }
-}
-
-/* Footer */
+/* ============================================================
+   FOOTER
+   ============================================================ */
 .footer {
   background-color: #000;
   color: #fff;
@@ -1234,7 +1117,6 @@ body {
   justify-content: flex-end;
 }
 
-/* Base styles for the social links container */
 .social-link {
   display: flex;
   align-items: center;
@@ -1249,29 +1131,12 @@ body {
   backdrop-filter: blur(10px);
 }
 
-/* Styles for the social media logos (img tags) */
 .social-link img {
   width: 24px;
   height: 24px;
   transition: transform 0.3s ease;
 }
 
-/* Base styles for the social links container */
-.social-link {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px;
-  height: 40px;
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 50%;
-  text-decoration: none;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
-}
-
-/* Hover effect for the social links and the images inside */
 .social-link:hover {
   background: #A68B5C;
   border-color: #A68B5C;
@@ -1330,47 +1195,9 @@ body {
   padding: 0;
 }
 
-/* Responsive footer */
-@media (max-width: 768px) {
-  .footer-right {
-    align-items: center;
-    text-align: center;
-  }
-
-  .footer-social {
-    justify-content: center;
-  }
-
-  .footer-title::after {
-    right: 50%;
-    transform: translateX(-50%);
-  }
-
-  .footer-section {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-
-  .footer-links-horizontal {
-    justify-content: center;
-    gap: 20px;
-  }
-
-  .footer-link-item {
-    font-size: 14px;
-  }
-
-  .footer-links li {
-    padding-left: 0;
-  }
-
-  .footer-links li::before {
-    display: none;
-  }
-}
-
-
-/* Responsive Design */
+/* ============================================================
+   RESPONSIVE DESIGN
+   ============================================================ */
 @media (max-width: 768px) {
   .main-container {
     min-height: 150vh;
@@ -1435,126 +1262,153 @@ body {
     font-size: 2.5rem;
   }
 
-  .footer {
-    margin-top: 0;
-    padding: 40px 0 20px;
+  .how-neurona-helps-section {
+    padding: 60px 0;
+  }
+
+  .how-it-works-section,
+  .how-neurona-helps-content {
+    padding-left: 0;
+    padding-right: 0;
+    margin-bottom: 3rem;
+  }
+
+  .how-it-works-title,
+  .helps-title {
+    font-size: 2.2rem;
+    text-align: center;
+  }
+
+  .how-it-works-title::after,
+  .helps-title::after {
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .slide-wrapper {
+    height: 380px;
+  }
+
+  .slide-text {
+    padding: 1.5rem;
+  }
+
+  .slide-title {
+    font-size: 1.4rem;
+  }
+
+  .slide-description {
+    font-size: 0.9rem;
+  }
+
+  .slide-features {
+    flex-wrap: wrap;
+  }
+
+  .slide-navigation {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .benefit-item {
+    flex-direction: column;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .cta-section {
+    text-align: center;
+  }
+
+  .blank-title {
+    font-size: 2.5rem;
+  }
+
+  .blank-subtitle {
+    font-size: 1.2rem;
+  }
+
+  .blank-cta {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .footer-right {
+    align-items: center;
+    text-align: center;
+  }
+
+  .footer-social {
+    justify-content: center;
+  }
+
+  .footer-title::after {
+    right: 50%;
+    transform: translateX(-50%);
+  }
+
+  .footer-section {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .footer-links-horizontal {
+    justify-content: center;
+    gap: 20px;
+  }
+
+  .footer-link-item {
+    font-size: 14px;
+  }
+
+  .footer-links li {
+    padding-left: 0;
+  }
+
+  .footer-links li::before {
+    display: none;
   }
 }
 
-/* Authentication Pages */
-.auth-body, .login-body {
-  background: linear-gradient(to bottom right, #0F0E17, #1E1A2B);
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  font-family: 'Poppins', sans-serif;
-}
+@media (max-width: 576px) {
+  .how-it-works-title,
+  .helps-title {
+    font-size: 2rem;
+  }
 
-.signup-wrapper, .login-wrapper {
-  padding: 60px 0;
-}
+  .slide-wrapper {
+    height: 320px;
+  }
 
-.auth-form-box, .glass-card {
-  background-color: #1E1A2B;
-  border-radius: 12px;
-  padding: 30px;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-  color: #FFFFFF;
-}
+  .slide-text {
+    padding: 1rem;
+  }
 
-.auth-form-box input,
-.auth-form-box select,
-.glass-card input,
-.glass-card select {
-  background-color: #2B2836;
-  border: 1px solid #555;
-  color: #fff;
-  padding: 10px;
-  width: 100%;
-  margin-bottom: 15px;
-  border-radius: 6px;
-}
+  .slide-overlay .slide-icon {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
 
-.auth-form-box a,
-.glass-card a {
-  color: #FF8BA7;
-  text-decoration: none;
-}
+  .slide-title {
+    font-size: 1.2rem;
+  }
 
-.auth-form-box a:hover,
-.glass-card a:hover {
-  text-decoration: underline;
-}
+  .benefit-item {
+    padding: 1.5rem;
+  }
 
-/* Dashboard Styles */
-.profile-img, .profile-pic {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-  cursor: pointer;
-}
+  .benefit-icon {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+  }
 
-.profile-dropdown {
-  position: relative;
-  display: inline-block;
-}
+  .blank-title {
+    font-size: 2rem;
+  }
 
-.dropdown-content {
-  display: none;
-  position: absolute;
-  right: 0;
-  background-color: #1E1A2B;
-  min-width: 180px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-  z-index: 1000;
-  border-radius: 8px;
-}
-
-.dropdown-content a {
-  color: #FFFFFF;
-  padding: 12px 16px;
-  text-decoration: none;
-  display: block;
-}
-
-.dropdown-content a:hover {
-  background-color: #2B2836;
-}
-
-.profile-dropdown:hover .dropdown-content {
-  display: block;
-}
-
-/* creator */
-.creator-actions .nav-link,
-.investor-nav .nav-link {
-  background-color: #72383D;
-  color: #fff !important;
-  padding: 8px 20px;
-  margin-left: 10px;
-  border-radius: 6px;
-  font-weight: 500;
-  transition: 0.3s ease;
-}
-
-.creator-actions .nav-link:hover,
-.investor-nav .nav-link:hover {
-  background-color: #AC9C8D;
-  color: #322D29 !important;
-}
-
-.admin-card .btn-signup {
-  font-size: 0.9rem;
-  padding: 8px 20px;
-  background-color: #7b86db;
-  border: none;
-  border-radius: 6px;
-  color: #0F0E17;
-  cursor: pointer;
-  transition: 0.3s;
-}
-
-.admin-card .btn-signup:hover {
-  background-color: #FFD6EC;
+  .blank-subtitle {
+    font-size: 1.1rem;
+  }
 }
