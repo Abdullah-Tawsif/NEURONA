@@ -1,44 +1,38 @@
-from fastapi import APIRouter, Request, Form
+from fastapi import APIRouter, Depends, Form, Request
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
+from sqlalchemy.orm import Session
 
-from database.database import SessionLocal
-from models.user import User
+from database.database import get_db
+from services.auth_service import authenticate_user, register_user
 
 router = APIRouter()
-
 templates = Jinja2Templates(directory="templates")
 
+LOGIN_REDIRECT = "/login"
+SIGNUP_TEMPLATE = "auth/signup.html"
+LOGIN_TEMPLATE = "auth/login.html"
 
-# =========================
-# SIGNUP PAGE
-# =========================
+
+def _redirect_by_role(role: str) -> RedirectResponse:
+    targets = {
+        "admin": "/admin",
+        "creator": "/creator_dashboard",
+        "investor": "/investor_dashboard",
+    }
+    return RedirectResponse(url=targets.get(role, "/"), status_code=303)
+
+
 @router.get("/signup", response_class=HTMLResponse)
 async def signup_page(request: Request):
-
-    return templates.TemplateResponse(
-        request=request,
-        name="auth/signup.html",
-        context={}
-    )
+    return templates.TemplateResponse(request=request, name=SIGNUP_TEMPLATE, context={})
 
 
-# =========================
-# LOGIN PAGE
-# =========================
 @router.get("/login", response_class=HTMLResponse)
 async def login_page(request: Request):
-
-    return templates.TemplateResponse(
-        request=request,
-        name="auth/login.html",
-        context={}
-    )
+    return templates.TemplateResponse(request=request, name=LOGIN_TEMPLATE, context={})
 
 
-# =========================
-# SIGNUP FORM
-# =========================
 @router.post("/signup", response_class=HTMLResponse)
 async def signup(
     request: Request,
@@ -46,170 +40,51 @@ async def signup(
     email: str = Form(...),
     password: str = Form(...),
     confirm_password: str = Form(...),
-    role: str = Form(...)
+    role: str = Form(...),
+    db: Session = Depends(get_db),
 ):
-
-    # Password check
     if password != confirm_password:
-
         return templates.TemplateResponse(
             request=request,
-            name="auth/signup.html",
-            context={
-                "message": "Passwords do not match"
-            }
+            name=SIGNUP_TEMPLATE,
+            context={"message": "Passwords do not match"},
         )
 
-    # Allowed email domains
-    allowed_domains = [
-        "gmail.com",
-        "yahoo.com",
-        "outlook.com",
-        "hotmail.com",
-        "neurona.com"
-    ]
-
-    domain = email.split("@")[-1].lower()
-
-    if domain not in allowed_domains:
-
+    user, error = register_user(db, username, email, password, role)
+    if error:
         return templates.TemplateResponse(
             request=request,
-            name="auth/signup.html",
-            context={
-                "message": "Email domain not allowed"
-            }
+            name=SIGNUP_TEMPLATE,
+            context={"message": error},
         )
-
-    # Database session
-    db = SessionLocal()
-
-    # Check existing email
-    existing_user = db.query(User).filter(
-        User.email == email
-    ).first()
-
-    if existing_user:
-
-        db.close()
-
-        return templates.TemplateResponse(
-            request=request,
-            name="auth/signup.html",
-            context={
-                "message": "Email already registered"
-            }
-        )
-
-    # Create new user
-    new_user = User(
-        username=username,
-        email=email,
-        password=password,
-        role=role
-    )
-
-    db.add(new_user)
-    db.commit()
-
-    db.close()
 
     return templates.TemplateResponse(
         request=request,
-        name="auth/signup.html",
-        context={
-            "message":
-            f"Account created successfully for {username}"
-        }
+        name=SIGNUP_TEMPLATE,
+        context={"message": f"Account created successfully for {username}"},
     )
 
 
-# =========================
-# LOGIN FORM
-# =========================
 @router.post("/login", response_class=HTMLResponse)
 async def login(
     request: Request,
     email: str = Form(...),
-    password: str = Form(...)
+    password: str = Form(...),
+    db: Session = Depends(get_db),
 ):
-
-    # =========================
-    # ADMIN LOGIN
-    # =========================
-    if email == "admin@neurona.com" and password == "1234":
-
-        request.session["user"] = {
-            "email": email,
-            "role": "admin"
-        }
-
-        return RedirectResponse(
-            url="/admin",
-            status_code=303
-        )
-
-    # =========================
-    # DATABASE LOGIN
-    # =========================
-    db = SessionLocal()
-
-    user = db.query(User).filter(
-        User.email == email,
-        User.password == password
-    ).first()
-
-    db.close()
-
-    # Invalid login
-    if not user:
-
+    session_data = authenticate_user(db, email, password)
+    if not session_data:
         return templates.TemplateResponse(
             request=request,
-            name="auth/login.html",
-            context={
-                "message": "Invalid email or password"
-            }
+            name=LOGIN_TEMPLATE,
+            context={"message": "Invalid email or password"},
         )
 
-    # SAVE SESSION
-    request.session["user"] = {
-        "id": user.id,
-        "username": user.username,
-        "email": user.email,
-        "role": user.role
-    }
+    request.session["user"] = session_data
+    return _redirect_by_role(session_data["role"])
 
-    # Creator
-    if user.role == "creator":
 
-        return RedirectResponse(
-            url="/creator_dashboard",
-            status_code=303
-        )
-
-    # Investor
-    elif user.role == "investor":
-
-        return RedirectResponse(
-            url="/investor_dashboard",
-            status_code=303
-        )
-
-    return RedirectResponse(
-        url="/",
-        status_code=303
-    )
-
-# =========================
-# LOGOUT
-# =========================
 @router.get("/logout")
 async def logout(request: Request):
-
     request.session.clear()
-
-    return RedirectResponse(
-        url="/login",
-        status_code=303
-    )
+    return RedirectResponse(url=LOGIN_REDIRECT, status_code=303)
