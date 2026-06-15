@@ -1,4 +1,8 @@
-/* Modern Investor Dashboard Styles */
+/* ===============================================
+   INVESTOR DASHBOARD STYLES
+   =============================================== */
+
+/* ========== RESET & BASE STYLES ========== */
 * {
   margin: 0;
   padding: 0;
@@ -13,7 +17,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Navbar Styles */
+/* ========== NAVIGATION BAR ========== */
 .navbar {
   background-color: #000000 !important;
   padding: 1rem 0;
@@ -26,7 +30,7 @@ body {
   transition: filter 3s ease;
 }
 
-/* Search Bar */
+/* ========== SEARCH BAR ========== */
 .search-container {
   position: relative;
   width: 100%;
@@ -67,7 +71,7 @@ body {
   color: #3b82f6;
 }
 
-/* Profile Section */
+/* ========== PROFILE SECTION ========== */
 .profile-section {
   display: flex;
   align-items: center;
@@ -80,6 +84,18 @@ body {
   color: white;
 }
 
+.verification-badge {
+  background-color: #2ecc71;
+  color: white;
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  font-weight: 500;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* ========== PROFILE DROPDOWN ========== */
 .profile-dropdown {
   position: relative;
 }
@@ -94,6 +110,11 @@ body {
   border-radius: 50px;
   cursor: pointer;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.profile-button:hover {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
 }
 
 .profile-img {
@@ -111,17 +132,6 @@ body {
 .dropdown-arrow {
   font-size: 12px;
   color: #555;
-}
-
-.verification-badge {
-  background-color: #2ecc71;
-  color: white;
-  font-size: 11px;
-  padding: 3px 8px;
-  border-radius: 20px;
-  font-weight: 500;
-  display: inline-block;
-  vertical-align: middle;
 }
 
 .dropdown-content {
@@ -191,447 +201,7 @@ body {
   border-left-color: #dc3545;
 }
 
-/* Main Container */
-.main-container {
-  padding: 32px 24px;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
-/* Hero Section */
-.hero-section {
-  margin-bottom: 40px;
-}
-
-.hero-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 32px;
-}
-
-.hero-text h1 {
-  font-size: 32px;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 8px;
-}
-
-.hero-subtitle {
-  font-size: 16px;
-  color: rgba(0, 0, 0, 0.6);
-  margin: 0;
-}
-
-.verification-prompt {
-  background: linear-gradient(135deg, rgba(59, 130, 246, 0.05) 0%, rgba(147, 51, 234, 0.05) 100%);
-  border: 1px solid rgba(59, 130, 246, 0.15);
-  border-radius: 16px;
-  padding: 24px;
-  max-width: 400px;
-}
-
-.verification-content {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
-
-.verification-icon {
-  font-size: 24px;
-  color: #3b82f6;
-}
-
-.verification-content h3 {
-  font-size: 16px;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 4px;
-}
-
-.verification-content p {
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.6);
-  margin: 0;
-}
-
-.verify-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 12px 20px;
-  background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-  color: #ffffff;
-  text-decoration: none;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  margin-left: auto;
-}
-
-.verify-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
-  color: #ffffff;
-}
-
-/* Section Headers */
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
-}
-
-.section-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0;
-}
-
-
-
-/* Opportunities Section */
-.opportunities-section {
-  margin-bottom: 48px;
-}
-
-.section-filters {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.filter-select {
-  padding: 8px 12px;
-  background: rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  color: #1a1a1a;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.filter-select:focus {
-  outline: none;
-  border-color: #3b82f6;
-}
-
-.filter-select option {
-  background: #ffffff;
-  color: #1a1a1a;
-}
-
-.view-toggle {
-  width: 36px;
-  height: 36px;
-  background: rgba(0, 0, 0, 0.03);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  color: rgba(0, 0, 0, 0.6);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.view-toggle:hover,
-.view-toggle.active {
-  background: #3b82f6;
-  border-color: #3b82f6;
-  color: #ffffff;
-}
-
-.opportunities-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-  gap: 24px;
-}
-
-.opportunities-grid.list-view {
-  grid-template-columns: 1fr;
-}
-
-.opportunities-grid.list-view .opportunity-card {
-  display: flex;
-  padding: 20px;
-}
-
-.opportunities-grid.list-view .opportunity-header {
-  flex-shrink: 0;
-  margin-right: 20px;
-  margin-bottom: 0;
-}
-
-.opportunities-grid.list-view .opportunity-content {
-  flex: 1;
-}
-
-.opportunity-card {
-  background: rgba(0, 0, 0, 0.02);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 16px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  position: relative;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-}
-
-.opportunity-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(0, 0, 0, 0.15);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-}
-
-.opportunity-header {
-  position: relative;
-  margin-bottom: 20px;
-}
-
-.opportunity-image {
-  position: relative;
-  height: 200px;
-  overflow: hidden;
-}
-
-.opportunity-image img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.3s ease;
-}
-
-.opportunity-card:hover .opportunity-image img {
-  transform: scale(1.05);
-}
-
-.opportunity-badge {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  padding: 4px 12px;
-  background: linear-gradient(135deg, #ef4444, #dc2626);
-  color: #ffffff;
-  font-size: 11px;
-  font-weight: 600;
-  border-radius: 20px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.bookmark-btn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 36px;
-  height: 36px;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(10px);
-  border: none;
-  border-radius: 50%;
-  color: #ffffff;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.bookmark-btn:hover,
-.bookmark-btn.bookmarked {
-  background: #3b82f6;
-  transform: scale(1.1);
-}
-
-.opportunity-content {
-  padding: 20px;
-}
-
-.opportunity-meta {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 12px;
-}
-
-.category,
-.stage {
-  padding: 4px 8px;
-  font-size: 11px;
-  font-weight: 600;
-  border-radius: 6px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.category {
-  background: rgba(59, 130, 246, 0.2);
-  color: #3b82f6;
-}
-
-.stage {
-  background: rgba(16, 185, 129, 0.2);
-  color: #10b981;
-}
-
-.opportunity-title {
-  font-size: 18px;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin-bottom: 8px;
-  line-height: 1.3;
-}
-
-.opportunity-description {
-  font-size: 14px;
-  color: rgba(0, 0, 0, 0.6);
-  line-height: 1.5;
-  margin-bottom: 16px;
-  display: -webkit-box;
-  line-clamp: 3;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-.opportunity-metrics {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-bottom: 16px;
-  padding: 16px;
-  background: rgba(0, 0, 0, 0.02);
-  border-radius: 12px;
-}
-
-.metric {
-  text-align: center;
-}
-
-.metric-label {
-  display: block;
-  font-size: 11px;
-  color: rgba(0, 0, 0, 0.5);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 4px;
-}
-
-.metric-value {
-  display: block;
-  font-size: 16px;
-  font-weight: 700;
-  color: #1a1a1a;
-}
-
-.opportunity-progress {
-  margin-bottom: 20px;
-}
-
-.progress-bar {
-  height: 6px;
-  background: rgba(0, 0, 0, 0.1);
-  border-radius: 3px;
-  overflow: hidden;
-  margin-bottom: 8px;
-}
-
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
-  border-radius: 3px;
-  transition: width 0.3s ease;
-}
-
-.progress-text {
-  font-size: 12px;
-  color: rgba(0, 0, 0, 0.6);
-  font-weight: 500;
-}
-
-.opportunity-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-}
-
-.founder-info {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.founder-avatar {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  border: 2px solid rgba(0, 0, 0, 0.1);
-}
-
-.founder-name {
-  display: block;
-  font-size: 14px;
-  font-weight: 600;
-  color: #1a1a1a;
-}
-
-.founder-title {
-  display: block;
-  font-size: 12px;
-  color: rgba(0, 0, 0, 0.5);
-}
-
-.opportunity-actions {
-  display: flex;
-  gap: 8px;
-}
-
-.action-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
-  text-decoration: none;
-}
-
-.action-btn.secondary {
-  background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-  color: #ffffff;
-}
-
-.action-btn.secondary:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
-}
-
-.action-btn.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  background: rgba(0, 0, 0, 0.1);
-  color: rgba(0, 0, 0, 0.4);
-  border: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.action-btn.disabled:hover {
-  transform: none;
-  box-shadow: none;
-}
-
-.blurred-image {
-  filter: blur(8px);
-  transition: filter 0.3s ease;
-}
-/* Custom Alert */
+/* ========== CUSTOM ALERT ========== */
 .custom-alert {
   background: rgba(59, 130, 246, 0.05);
   border: 1px solid rgba(59, 130, 246, 0.15);
@@ -643,13 +213,43 @@ body {
   filter: none;
 }
 
-/* Responsive Design */
-@media (max-width: 1200px) {
-  .nav-center {
-    max-width: 400px;
-    margin: 0 20px;
+/* ========== RESPONSIVE DESIGN ========== */
+@media (max-width: 768px) {
+  .profile-section {
+    gap: 12px;
   }
-  .opportunities-grid {
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+
+  .investor-name {
+    font-size: 14px;
+  }
+
+  .search-input {
+    font-size: 13px;
+    padding: 10px 12px 10px 36px;
+  }
+
+  .navbar-logo {
+    height: 40px;
+  }
+}
+
+@media (max-width: 576px) {
+  .profile-section {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .search-input {
+    padding: 8px 12px 8px 32px;
+    font-size: 12px;
+  }
+
+  .navbar-logo {
+    height: 35px;
+  }
+
+  .verification-badge {
+    font-size: 10px;
+    padding: 2px 6px;
   }
 }
