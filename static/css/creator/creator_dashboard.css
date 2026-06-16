@@ -37,14 +37,27 @@ body {
 }
 
 .verification-badge {
-  background-color: #2ecc71;
-  color: white;
   font-size: 11px;
   padding: 3px 8px;
   border-radius: 20px;
   font-weight: 500;
   display: inline-block;
   vertical-align: middle;
+}
+
+.verification-badge.verified {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.verification-badge.unverified {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.verification-badge.pending {
+  background-color: #f1c40f;
+  color: #333;
 }
 
 /* ================================================
@@ -194,7 +207,7 @@ body {
 }
 
 .hero-background {
-  background-image: url('../images/idea2.jpg');
+  background-image: url('/static/images/idea2.jpg');
   background-size: cover;
   background-position: center;
   padding: 60px 0;
@@ -418,6 +431,18 @@ body {
   border-radius: 8px;
   border: none;
   font-size: 14px;
+}
+
+.popup-success {
+  background-color: #d4edda;
+  border-left: 4px solid #2ecc71;
+  font-weight: 500;
+}
+
+.popup-warning {
+  background-color: #fff3cd;
+  border-left: 4px solid #f1c40f;
+  font-weight: 500;
 }
 
 /* ================================================
