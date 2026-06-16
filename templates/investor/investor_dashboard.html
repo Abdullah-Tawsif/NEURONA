@@ -4,145 +4,320 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Investor Dashboard – Neurona</title>
+
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+
   <link rel="stylesheet" href="/static/css/investor/investor_dashboard.css"/>
 </head>
+
 <body>
 
-<!-- Top Navigation Bar -->
+<!-- ================= NAVBAR ================= -->
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
   <div class="container d-flex justify-content-between align-items-center">
 
+    <!-- Logo -->
     <div class="logo">
-      <img src="/static/images/logo_white.png" class="navbar-logo" alt="Neurona Logo">
+      <img src="/static/images/logo_white.png"
+           class="navbar-logo"
+           alt="Neurona Logo">
     </div>
 
-<!-- search button -->
-
-      <div class="nav-center">
+    <!-- Search -->
+    <div class="nav-center">
       <div class="search-container">
         <i class="fas fa-search search-icon"></i>
-        <input type="text" placeholder="Search ideas, categories, or creators..." class="search-input">
+
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search ideas, categories, or creators..."
+        >
       </div>
     </div>
 
+    <!-- Profile -->
     <div class="profile-section d-flex align-items-center gap-3">
 
-      <span class="investor-name">{{ username }}</span>
-      {% if verified == 1 %}
-        <span class="verification-badge ms-2">Verified</span>
+      <span class="investor-name">
+        {{ username }}
+      </span>
+
+      {% if verified == 0 %}
+        <span class="verification-badge unverified ms-2">
+          Unverified
+        </span>
+
+      {% elif verified == 1 %}
+        <span class="verification-badge verified ms-2">
+          Verified
+        </span>
+
+      {% elif verified == 2 %}
+        <span class="verification-badge pending ms-2">
+          Pending
+        </span>
+
+      {% elif verified == 3 %}
+        <span class="verification-badge unverified ms-2">
+          Declined
+        </span>
       {% endif %}
 
       <div class="profile-dropdown position-relative">
+
         <button class="profile-button">
-          <img src="/static/images/user_logo.png" alt="Profile" class="profile-img" />
+          <img
+            src="/static/images/user_logo.png"
+            alt="Profile"
+            class="profile-img"
+          >
+
           <i class="fas fa-chevron-down dropdown-arrow"></i>
         </button>
 
         <div class="dropdown-content">
-          <a href="/profile">Profile</a>
+          <a href="/investor_profile">Profile</a>
           <a href="/investor_dashboard">Dashboard</a>
           <a href="/notifications">Notifications</a>
           <a href="/investor_pending_investments">My Investments</a>
           <a href="/investor_wallet">Wallet</a>
           <a href="/logout">Logout</a>
         </div>
+
       </div>
+
     </div>
 
   </div>
 </nav>
 
-<!-- ================= MESSAGE (FASTAPI WAY) ================= -->
+<!-- ================= SUCCESS / WARNING MESSAGE ================= -->
+
 <div class="container mt-3">
 
-  {% if message %}
+  {% if submitted %}
+
+    <div class="alert alert-success alert-dismissible fade show popup-success">
+
+      Your verification request has been sent successfully.
+
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert">
+      </button>
+
+    </div>
+
+  {% elif already_submitted %}
+
+    <div class="alert alert-warning alert-dismissible fade show popup-warning">
+
+      Please wait until your account is verified.
+
+      <button
+        type="button"
+        class="btn-close"
+        data-bs-dismiss="alert">
+      </button>
+
+    </div>
+
+  {% elif message %}
+
     <div class="alert alert-info">
       {{ message }}
     </div>
+
   {% endif %}
 
 </div>
 
 <!-- ================= HERO ================= -->
+
 <div class="container mt-4">
 
   <h3>Welcome back, {{ username }}</h3>
 
-  {% if verified == 0 or verified == 2 %}
-  <div class="alert alert-warning mt-3">
+  <!-- UNVERIFIED -->
 
-    {% if verified == 2 %}
-      Your verification was declined. Please re-submit your details.
-    {% else %}
-      Complete verification to unlock full access.
-    {% endif %}
+  {% if verified == 0 %}
 
-    <a href="/verify_investor" class="btn btn-sm btn-primary ms-2">
-      Verify Now
-    </a>
+    <div class="alert alert-warning mt-4">
 
-  </div>
+      <h4>Complete Your Verification</h4>
+
+      <p>
+        Your account is currently unverified.
+        Complete verification to unlock all investor features.
+      </p>
+
+      <a href="/verify_investor" class="verify-btn">
+        Verify Now
+        <i class="fas fa-arrow-right ms-2"></i>
+      </a>
+
+    </div>
+
+  <!-- PENDING -->
+
+  {% elif verified == 2 %}
+
+    <div class="alert alert-info mt-4">
+
+      <h4>Verification Pending</h4>
+
+      <p>
+        Your verification request has been submitted successfully.
+        Please wait while our team reviews it.
+      </p>
+
+      <span class="verification-badge pending">
+        Pending
+      </span>
+
+    </div>
+
+  <!-- DECLINED -->
+
+  {% elif verified == 3 %}
+
+    <div class="alert alert-danger mt-4">
+
+      <h4>Verification Declined</h4>
+
+      <p>
+        Your verification request was declined.
+        Please submit your information again.
+      </p>
+
+      <a href="/verify_investor" class="verify-btn">
+        Re-Verify Now
+        <i class="fas fa-arrow-right ms-2"></i>
+      </a>
+
+    </div>
+
+  <!-- VERIFIED -->
+
+  {% elif verified == 1 %}
+
+    <div class="alert alert-success mt-4">
+
+      <h4>Account Verified</h4>
+
+      <p>
+        Your account has been successfully verified.
+        You now have full access to all investment opportunities.
+      </p>
+
+    </div>
+
   {% endif %}
 
 </div>
 
-<!-- ================= IDEAS ================= -->
-<div class="container mt-4">
+<!-- ================= INVESTMENT OPPORTUNITIES ================= -->
+
+<div class="container mt-5">
 
   <h4>Investment Opportunities</h4>
 
   <div class="row mt-3">
 
     {% for idea in ideas %}
-    <div class="col-md-4 mb-4">
 
-      <div class="card shadow-sm">
+      <div class="col-md-4 mb-4">
 
-        <img src="/static/images/idea.jpg" class="card-img-top">
+        <div class="card shadow-sm h-100">
 
-        <div class="card-body">
+          <img
+            src="/static/images/idea.jpg"
+            class="card-img-top"
+            alt="Idea Image"
+          >
 
-          <h5 class="card-title">{{ idea.title }}</h5>
-          <p class="card-text">{{ idea.summary }}</p>
+          <div class="card-body">
 
-          <p><b>Category:</b> {{ idea.category }}</p>
-          <p><b>Funding:</b> BDT {{ idea.funding_needed }}</p>
-          <p><b>Equity:</b> {{ idea.equity_offered }}%</p>
-          <p><b>Progress:</b> {{ idea.funding_progress }}%</p>
+            <h5 class="card-title">
+              {{ idea.title }}
+            </h5>
 
-          {% if verified == 1 %}
-            <a href="/idea_details/{{ idea.id }}" class="btn btn-primary btn-sm">
-              View Details
-            </a>
-          {% else %}
-            <button class="btn btn-secondary btn-sm" disabled>
-              Locked
-            </button>
-          {% endif %}
+            <p class="card-text">
+              {{ idea.summary }}
+            </p>
+
+            <p>
+              <strong>Category:</strong>
+              {{ idea.category }}
+            </p>
+
+            <p>
+              <strong>Funding:</strong>
+              BDT {{ idea.funding_needed }}
+            </p>
+
+            <p>
+              <strong>Equity:</strong>
+              {{ idea.equity_offered }}%
+            </p>
+
+            <p>
+              <strong>Progress:</strong>
+              {{ idea.funding_progress }}%
+            </p>
+
+            {% if verified == 1 %}
+
+              <a
+                href="/idea_details/{{ idea.id }}"
+                class="btn btn-primary btn-sm"
+              >
+                View Details
+              </a>
+
+            {% else %}
+
+              <button
+                class="btn btn-secondary btn-sm"
+                disabled
+              >
+                Locked
+              </button>
+
+            {% endif %}
+
+          </div>
 
         </div>
 
       </div>
 
-    </div>
     {% endfor %}
 
     {% if ideas|length == 0 %}
-      <p class="text-muted">No investment opportunities yet.</p>
+
+      <div class="col-12">
+        <p class="text-muted">
+          No investment opportunities available yet.
+        </p>
+      </div>
+
     {% endif %}
 
   </div>
 
 </div>
 
+<!-- ================= JS ================= -->
 
-  <!-- JS -->
-  <script src="/static/js/investor_dashboard.js"></script>
+<script src="/static/js/investor_dashboard.js"></script>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
