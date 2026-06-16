@@ -22,10 +22,41 @@
 
     <div class="profile-section d-flex align-items-center gap-3">
 
-      <span class="creator-name">{{ creator_name or username }}</span>
-      {% if verified == 1 %}
-        <span class="verification-badge ms-2">Verified</span>
-      {% endif %}
+
+<!-- Profile -->
+<span class="creator-name">{{ creator_name or username }}</span>
+
+{% if verified == 0 %}
+
+  <span class="verification-badge unverified ms-2">
+    Unverified
+  </span>
+
+{% elif verified == 1 %}
+
+  <span class="verification-badge verified ms-2">
+    Verified
+  </span>
+
+{% elif verified == 2 %}
+
+  <span class="verification-badge pending ms-2">
+    Pending
+  </span>
+
+{% elif verified == 3 %}
+
+  <span class="verification-badge unverified ms-2">
+    Declined
+  </span>
+
+{% else %}
+
+  <span class="verification-badge unverified ms-2">
+    Unverified
+  </span>
+
+{% endif %}
 
       <div class="profile-dropdown position-relative">
         <button class="profile-button">
@@ -36,7 +67,7 @@
 
 
         <div class="dropdown-content">
-          <a href="/profile">Profile</a>
+          <a href="/creator_profile">Profile</a>
           <a href="/creator_dashboard">Dashboard</a>
           <a href="/notifications">Notifications</a>
           <a href="/creator_investment_requests">Investment Requests</a>
@@ -52,13 +83,17 @@
 
 
   <div class="container mt-3">
-    
-      {% if messages %}
-          <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-      {% endif %}
+    {% if submitted %}
+      <div class="alert alert-success alert-dismissible fade show popup-success" role="alert">
+        Your verification request has been sent successfully.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% elif already_submitted %}
+      <div class="alert alert-warning alert-dismissible fade show popup-warning" role="alert">
+        Please wait until your account is verified.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+    {% endif %}
   </div>
 
 <section class="hero-section">
@@ -73,22 +108,30 @@
               <div class="verification-content">
                 <i class="fas fa-shield-alt verification-icon"></i>
                 <div>
-                  {% if verified == 2 %}
+                  {% if verified == 3 %}
                     <h3>Verification Declined</h3>
                     <p>Your previous request was declined. Please re-submit your details to try again.</p>
-                  {% else %}
+                  {% elif verified == 0 %}
                     <h3>Complete Your Verification</h3>
                     <p>Your account is not yet verified. Please complete your profile to submit ideas.</p>
+                  {% else %}
+                    <h3>Verification Pending</h3>
+                    <p>Your verification request is under review. We will notify you once it's processed.</p>
                   {% endif %}
                 </div>
-                <a href="/verify_creator" class="verify-btn">
-                  {% if verified == 2 %}
+                {% if verified == 3 %}
+                  <a href="/verify_creator" class="verify-btn">
                     Re-verify Now
-                  {% else %}
+                    <i class="fas fa-arrow-right ms-2"></i>
+                  </a>
+                {% elif verified == 2 %}
+                  <span class="verification-badge pending">Pending</span>
+                {% else %}
+                  <a href="/verify_creator" class="verify-btn">
                     Verify Now
-                  {% endif %}
-                  <i class="fas fa-arrow-right ms-2"></i>
-                </a>
+                    <i class="fas fa-arrow-right ms-2"></i>
+                  </a>
+                {% endif %}
               </div>
             </div>
           </div>
