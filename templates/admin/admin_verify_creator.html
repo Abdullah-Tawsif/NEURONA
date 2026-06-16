@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Investor Verification - Admin</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/admin/admin_verify_creator.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="header">Creator Verification Requests</div>
+
+{% for v in verifications %}
+
+<div class="card">
+
+    <div>
+        {% if v.status == "pending" %}
+            <span class="status pending">Pending</span>
+        {% elif v.status == "approved" %}
+            <span class="status approved">Approved</span>
+        {% else %}
+            <span class="status rejected">Rejected</span>
+        {% endif %}
+    </div>
+
+    <div class="grid">
+        <div>
+            <div class="label">Full Name</div>
+            <div class="value">{{ v.full_name }}</div>
+        </div>
+
+        <div>
+            <div class="label">Phone</div>
+            <div class="value">{{ v.phone }}</div>
+        </div>
+
+        <div>
+            <div class="label">Gov ID</div>
+            <div class="value">{{ v.gov_id }}</div>
+        </div>
+
+        <div>
+            <div class="label">LinkedIn</div>
+            <div class="value">
+                <a href="{{ v.linkedin_id }}" target="_blank" style="color:#60a5fa;">
+                    Open Profile
+                </a>
+            </div>
+        </div>
+
+        <div style="grid-column: span 2;">
+            <div class="label">Address</div>
+            <div class="value">{{ v.present_address }}</div>
+        </div>
+    </div>
+
+    <!-- <hr style="border:0; border-top:1px solid #2a3142; margin:15px 0;">
+
+    <div class="label">Mandatory Document</div>
+    <a class="file-link" href="/{{ v.mandatory_doc }}" target="_blank">
+        View File
+    </a>
+
+    {% if v.optional_doc %}
+    <div class="label" style="margin-top:10px;">Optional Document</div>
+    <a class="file-link" href="/{{ v.optional_doc }}" target="_blank">
+        View File
+    </a>
+    {% endif %} -->
+
+    {% if v.status == "pending" %}
+    <div class="actions">
+
+        <form method="post" action="/admin/creator/approve/{{ v.id }}">
+            <button class="btn approve" type="submit">Accept</button>
+        </form>
+
+        <form method="post" action="/admin/creator/reject/{{ v.id }}">
+            <button class="btn reject" type="submit">Reject</button>
+        </form>
+
+    </div>
+    {% endif %}
+
+</div>
+
+{% endfor %}
+
+</div>
+
+</body>
+</html>
