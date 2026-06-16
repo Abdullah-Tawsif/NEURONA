@@ -1,0 +1,29 @@
+.investor-nav .nav-link {
+  background-color: #72383D;
+  color: #fff !important;
+  padding: 8px 20px;
+  margin-left: 10px;
+  border-radius: 6px;
+  font-weight: 500;
+  transition: 0.3s ease;
+}
+
+.investor-nav .nav-link:hover {
+  background-color: #AC9C8D;
+  color: #322D29 !important;
+}
+
+.admin-card .btn-signup {
+  font-size: 0.9rem;
+  padding: 8px 20px;
+  background-color: #7b86db;
+  border: none;
+  border-radius: 6px;
+  color: #0F0E17;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.admin-card .btn-signup:hover {
+  background-color: #FFD6EC;
+}
