@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Verify Investor – Neurona</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="/static/css/investor/verify_investor.css"/>
+</head>
+<body>
+
+<div class="container mt-5">
+  <h2 class="mb-4">Verify Your Identity</h2>
+
+{% if messages %}
+    {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" 
+                    class="btn-close" 
+                    data-bs-dismiss="alert" 
+                    aria-label="Close">
+            </button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+  <form method="POST" action="/verify_investor" enctype="multipart/form-data" id="verifyForm" novalidate>
+    
+    <div class="mb-3">
+      <label for="email" class="form-label">Email (readonly)</label>
+      <input type="email" class="form-control" id="email" name="email" value="{{ email }}" readonly />
+    </div>
+
+    <div class="mb-3">
+      <label for="full_name" class="form-label">Full Name</label>
+      <input type="text" class="form-control" id="full_name" name="full_name" required />
+      <div id="name-feedback" class="invalid-feedback d-none">Please enter first name and last name within 2 words, like "John Doe".</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="phone" class="form-label">Phone Number</label>
+      <input type="text" class="form-control" id="phone" name="phone" required />
+      <div id="phone-feedback" class="invalid-feedback d-none">Enter a valid phone number (e.g., +8801XXXXXXXXX or 01XXXXXXXXX).</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="gov_id" class="form-label">Government ID Number/Passport Number</label>
+      <input type="text" class="form-control" id="gov_id" name="gov_id" required />
+      <div id="gov-feedback" class="invalid-feedback d-none">Only accepting Bangladesh National ID Number (17 digits).</div>
+    </div>
+
+    <div class="mb-3">
+      <label for="linkedin_id" class="form-label">Your LinkedIn profile link</label>
+      <input type="text" class="form-control" id="linkedin_id" name="linkedin_id" required />
+      <div id="linkedin-feedback" class="invalid-feedback d-none">Enter a valid LinkedIn profile URL (e.g., https://www.linkedin.com/in/username).</div>
+    </div>
+
+    <div class="mb-3">
+    <label for="mandatory_doc" class="form-label">Upload Bank Statement or Previous Investment Record <span class="text-danger">*</span></label>
+    <input type="file" class="form-control" id="mandatory_doc" name="mandatory_doc" accept=".pdf,.jpg,.jpeg,.png" required />
+    <div class="invalid-feedback">This document is required (PDF/JPG/PNG).</div>
+  </div>
+    <div id="file-alert" class="alert alert-danger d-none" role="alert">
+  Bank Statement or Investment Record is required.
+</div>
+
+
+  <div class="mb-3">
+    <label for="optional_doc" class="form-label">Upload Additional Supporting Document (Optional)</label>
+    <input type="file" class="form-control" id="optional_doc" name="optional_doc" accept=".pdf,.jpg,.jpeg,.png" />
+  </div>
+
+    <div class="mb-3">
+      <label for="present_address" class="form-label">Your present address</label>
+      <textarea class="form-control" id="present_address" name="present_address" rows="3" required></textarea>
+      <div id="address-feedback" class="invalid-feedback d-none">Address cannot be empty.</div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Verification</button>
+  </form>
+</div>
+
+</body>
+</html>
