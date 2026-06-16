@@ -85,14 +85,27 @@ body {
 }
 
 .verification-badge {
-  background-color: #2ecc71;
-  color: white;
   font-size: 11px;
   padding: 3px 8px;
   border-radius: 20px;
   font-weight: 500;
   display: inline-block;
   vertical-align: middle;
+}
+
+.verification-badge.verified {
+  background-color: #2ecc71;
+  color: white;
+}
+
+.verification-badge.unverified {
+  background-color: #e74c3c;
+  color: white;
+}
+
+.verification-badge.pending {
+  background-color: #f1c40f;
+  color: #333;
 }
 
 /* ========== PROFILE DROPDOWN ========== */
@@ -199,6 +212,33 @@ body {
 .dropdown-content a:last-child:hover {
   background-color: #f8d7da;
   border-left-color: #dc3545;
+}
+/* ================================================
+   VERIFICATION PROMPT
+   ================================================ */
+.verification-prompt {
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  border-radius: 8px;
+  color: white;
+}
+
+.verification-content h3,
+.verification-content p {
+  color: white;
+  margin-bottom: 5px;
+}
+
+.verification-content .verification-icon {
+  color: white;
+}
+
+.verification-prompt .verify-btn {
+  color: white;
+}
+
+.verification-prompt .verify-btn:hover {
+  color: white;
 }
 
 /* ========== CUSTOM ALERT ========== */
