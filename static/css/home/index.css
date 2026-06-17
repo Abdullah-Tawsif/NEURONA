@@ -94,10 +94,6 @@ body {
   transition: filter 3s ease;
 }
 
-.navbar.scrolled .navbar-logo {
-  filter: brightness(500%) contrast(150%);
-}
-
 .nav-button {
   padding: 8px 18px;
   border-radius: 6px;
