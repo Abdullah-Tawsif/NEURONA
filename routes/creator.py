@@ -1,9 +1,11 @@
 from fastapi import APIRouter, Depends, Request, Form
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from database.database import get_db
+from models.creator_verification import CreatorVerification
+from models.user import User
 from services.creator_service import get_creator_dashboard_data, create_creator_verification
 
 router = APIRouter()
@@ -32,20 +34,17 @@ async def creator_dashboard(
 
 # verify_creator
 @router.get("/verify_creator", response_class=HTMLResponse)
-async def verify_invesor_page(request: Request, db: Session = Depends(get_db)):
+async def verify_creator_page(request: Request, db: Session = Depends(get_db)):
     user = request.session.get("user")
     if not user or user.get("role") != "creator":
         return RedirectResponse(url="/login", status_code=303)
-
-    from services.creator_service import has_existing_verification
-    from models.creator_verification import CreatorVerification
 
     existing = (
         db.query(CreatorVerification)
         .filter(CreatorVerification.user_id == user["id"])
         .first()
     )
-    if existing:
+    if existing and existing.status == "pending":
         return RedirectResponse(
             url="/creator_dashboard?already_submitted=1",
             status_code=303,
@@ -101,7 +100,7 @@ async def verify_creator(
     )
 
 # Creator Profile
-@router.get("/creator_profile", response_class=HTMLResponse)  # 
+@router.get("/creator_profile", response_class=HTMLResponse)
 async def creator_profile(request: Request, db: Session = Depends(get_db)):
 
     user = request.session.get("user")
@@ -125,3 +124,21 @@ async def creator_profile(request: Request, db: Session = Depends(get_db)):
             "stats": stats
         }
     )
+
+
+# Dismiss verified popup
+@router.post("/dismiss_verified_popup")
+async def dismiss_verified_popup(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    user = request.session.get("user")
+    if not user:
+        return JSONResponse({"success": False}, status_code=401)
+
+    db_user = db.query(User).filter(User.id == user.get("id")).first()
+    if db_user:
+        db_user.verified_popup_shown = True
+        db.commit()
+
+    return JSONResponse({"success": True})
