@@ -47,7 +47,7 @@ async def signup(
         return templates.TemplateResponse(
             request=request,
             name=SIGNUP_TEMPLATE,
-            context={"message": "Passwords do not match"},
+            context={"message": "Passwords do not match", "message_type": "error"},
         )
 
     user, error = register_user(db, username, email, password, role)
@@ -55,13 +55,13 @@ async def signup(
         return templates.TemplateResponse(
             request=request,
             name=SIGNUP_TEMPLATE,
-            context={"message": error},
+            context={"message": error, "message_type": "error"},
         )
 
     return templates.TemplateResponse(
         request=request,
         name=SIGNUP_TEMPLATE,
-        context={"message": f"Account created successfully for {username}"},
+        context={"message": f"Account created successfully for {username}", "message_type": "success"},
     )
 
 
@@ -77,7 +77,7 @@ async def login(
         return templates.TemplateResponse(
             request=request,
             name=LOGIN_TEMPLATE,
-            context={"message": "Invalid email or password"},
+            context={"message": "Invalid email or password", "message_type": "error"},
         )
 
     request.session["user"] = session_data
