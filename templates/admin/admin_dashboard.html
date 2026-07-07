@@ -2,120 +2,477 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Dashboard – Neurona</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard - Neurona</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/admin/admin_dashboard.css">
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/static/css/admin/admin_dashboard.css">
 </head>
 <body>
-  <div class="wrapper">
-    <nav id="sidebar">
-      <div class="sidebar-header">
-        <img src="/static/images/logo_white.png" alt="Neurona Logo" class="sidebar-logo">
-        <h3>Admin Panel</h3>
-      </div>
-      <ul class="list-unstyled components">
-        <li class="active">
-          <a href="/admin"><i class="fas fa-tachometer-alt me-2"></i>Dashboard</a>
-        </li>
-        <li>
-          <a href="/user_management"><i class="fas fa-users me-2"></i>Manage Users</a>
-        </li>
-        <li>
-          <a href="/admin/admin_verify_creator"><i class="fas fa-user-check me-2"></i>Verify Creators</a>
-        </li>
-        <li>
-          <a href="/admin/admin_verify_investor"><i class="fas fa-user-shield me-2"></i>Verify Investors</a>
-        </li>
-        <li class="sidebar-divider"></li>
-        <li>
-          <a href="/logout" class="logout-link"><i class="fas fa-sign-out-alt me-2"></i>Logout</a>
-        </li>
-      </ul>
-    </nav>
 
-    <div id="content">
-      <nav class="top-navbar">
-        <div class="navbar-content">
-          <div class="navbar-left">
-            <button type="button" id="sidebarCollapse" class="sidebar-toggle">
-              <i class="fas fa-bars"></i>
-            </button>
-            <div class="page-title">
-              <h4 class="mb-0">Dashboard Overview</h4>
-            </div>
-          </div>
-          <div class="navbar-right">
-            <div class="admin-profile">
-              <div class="profile-info">
-                <span class="admin-name">{{ username }}</span>
-              </div>
-              <div class="profile-avatar">
-                <i class="fas fa-user-shield"></i>
-              </div>
-            </div>
-          </div>
+<div class="admin-wrapper">
+
+  <!-- Modern Sidebar -->
+  <aside class="admin-sidebar collapsed" id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-container">
+        <img src="/static/images/logo_white.png" alt="Neurona" class="brand-logo">
+        <div class="brand-text">
+          <span class="brand-name">Neurona</span>
+          <span class="brand-tagline">Admin Panel</span>
         </div>
-      </nav>
-
-      <div class="main-content">
-        <div class="row g-4 mb-4">
-          <div class="col-xl-3 col-md-6">
-            <a href="/user_management" class="text-decoration-none text-white">
-              <div class="stats-card">
-                <div class="stats-icon bg-primary">
-                  <i class="fas fa-users"></i>
-                </div>
-                <div class="stats-content">
-                  <h3 class="stats-number">{{ total_users }}</h3>
-                  <p class="stats-label">Total Users</p>
-                  <div class="stats-trend">
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-
-          <div class="col-xl-3 col-md-5">
-            <div class="stats-card">
-              <div class="stats-icon bg-success">
-                <i class="fas fa-dollar-sign"></i>
-              </div>
-              <div class="stats-content">
-                <h3 class="stats-number">
-                  <span class="currency">BDT</span>
-                  <span class="amount">8,940</span>
-                </h3>
-                <p class="stats-label">Total Revenue</p>
-                <div class="stats-trend">
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-xl-3 col-md-6">
-            <a href="/admin_ideas" class="text-decoration-none text-white">
-              <div class="stats-card">
-                <div class="stats-icon bg-info">
-                  <i class="fas fa-lightbulb"></i>
-                </div>
-                <div class="stats-content">
-                  <h3 class="stats-number">{{ total_ideas }}</h3>
-                  <p class="stats-label">Active Ideas</p>
-                  <div class="stats-trend">
-                  </div>
-                </div>
-              </div>
-            </a>
-          </div>
-        </div>
-
       </div>
     </div>
-  </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-  <script src="/static/js/admin_dashboard.js"></script>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <span class="nav-section-title">Main Menu</span>
+        <ul class="nav-list">
+          <li class="nav-item active">
+            <a href="/admin" class="nav-link">
+              <span class="nav-icon"><i class="fas fa-th-large"></i></span>
+              <span class="nav-text">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/user_management" class="nav-link">
+              <span class="nav-icon"><i class="fas fa-users"></i></span>
+              <span class="nav-text">User Management</span>
+              <span class="nav-badge">{{ total_users }}</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/admin_ideas" class="nav-link">
+              <span class="nav-icon"><i class="fas fa-lightbulb"></i></span>
+              <span class="nav-text">Ideas</span>
+              <span class="nav-badge">{{ total_ideas }}</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="nav-section">
+        <span class="nav-section-title">Verification</span>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="/admin/admin_verify_creator" class="nav-link">
+              <span class="nav-icon"><i class="fas fa-user-check"></i></span>
+              <span class="nav-text">Creators</span>
+              {% if pending_creator_verifications > 0 %}
+              <span class="nav-badge warning">{{ pending_creator_verifications }}</span>
+              {% endif %}
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/admin/admin_verify_investor" class="nav-link">
+              <span class="nav-icon"><i class="fas fa-user-tie"></i></span>
+              <span class="nav-text">Investors</span>
+              {% if pending_investor_verifications > 0 %}
+              <span class="nav-badge warning">{{ pending_investor_verifications }}</span>
+              {% endif %}
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="nav-section">
+        <span class="nav-section-title">Finance</span>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="/admin_transactions" class="nav-link">
+              <span class="nav-icon"><i class="fas fa-exchange-alt"></i></span>
+              <span class="nav-text">Transactions</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/admin_withdrawals" class="nav-link">
+              <span class="nav-icon"><i class="fas fa-wallet"></i></span>
+              <span class="nav-text">Withdrawals</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <div class="nav-section nav-section-bottom">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="/admin_settings" class="nav-link">
+              <span class="nav-icon"><i class="fas fa-cog"></i></span>
+              <span class="nav-text">Settings</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/logout" class="nav-link logout-link">
+              <span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span>
+              <span class="nav-text">Logout</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="admin-main" id="mainContent">
+    <!-- Top Header -->
+    <header class="admin-header">
+      <div class="header-left">
+        <button class="sidebar-toggle" id="sidebarToggle">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="breadcrumb-wrapper">
+          <span class="breadcrumb-item"><a href="/admin">Home</a></span>
+          <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+          <span class="breadcrumb-item active">Dashboard</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="header-search">
+          <i class="fas fa-search"></i>
+          <input type="text" placeholder="Search anything...">
+        </div>
+
+        <div class="header-actions">
+          <button class="header-btn notification-btn">
+            <i class="fas fa-bell"></i>
+            {% if total_pending_verifications > 0 %}
+            <span class="notification-dot"></span>
+            {% endif %}
+          </button>
+
+          <div class="header-divider"></div>
+
+          <div class="user-menu">
+            <div class="user-avatar">
+              <i class="fas fa-user-shield"></i>
+            </div>
+            <div class="user-info">
+              <span class="user-name">{{ username }}</span>
+              <span class="user-role">Administrator</span>
+            </div>
+            <i class="fas fa-chevron-down dropdown-arrow"></i>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard Content -->
+    <div class="admin-content">
+      <!-- Welcome Section -->
+      <div class="welcome-section">
+        <div class="welcome-text">
+          <h1>Welcome back, {{ username }}!</h1>
+          <p>Here's what's happening with your platform today.</p>
+        </div>
+        <div class="welcome-date">
+          <span class="date-icon"><i class="fas fa-calendar-alt"></i></span>
+          <span class="date-text" id="currentDate"></span>
+        </div>
+      </div>
+
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-body">
+            <div class="stat-icon-wrapper gradient-purple">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="stat-details">
+              <div class="stat-value">{{ total_users }}</div>
+              <div class="stat-label">Total Users</div>
+              <div class="stat-change positive">
+                <i class="fas fa-user-plus"></i>
+                <span>{{ total_creators }} creators, {{ total_investors }} investors</span>
+              </div>
+            </div>
+          </div>
+          <div class="stat-card-footer">
+            <a href="/user_management">View all users <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-body">
+            <div class="stat-icon-wrapper gradient-blue">
+              <i class="fas fa-lightbulb"></i>
+            </div>
+            <div class="stat-details">
+              <div class="stat-value">{{ total_ideas }}</div>
+              <div class="stat-label">Active Ideas</div>
+              <div class="stat-change positive">
+                <i class="fas fa-chart-line"></i>
+                <span>On platform</span>
+              </div>
+            </div>
+          </div>
+          <div class="stat-card-footer">
+            <a href="/admin_ideas">View all ideas <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-body">
+            <div class="stat-icon-wrapper gradient-green">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-details">
+              <div class="stat-value">{{ total_verified }}</div>
+              <div class="stat-label">Verified Users</div>
+              <div class="stat-change positive">
+                <i class="fas fa-shield-alt"></i>
+                <span>{{ ((total_verified / total_users * 100) if total_users > 0 else 0)|round(1) }}% of total</span>
+              </div>
+            </div>
+          </div>
+          <div class="stat-card-footer">
+            <a href="/user_management">View verified <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-body">
+            <div class="stat-icon-wrapper gradient-orange">
+              <i class="fas fa-user-check"></i>
+            </div>
+            <div class="stat-details">
+              <div class="stat-value">{{ total_pending_verifications }}</div>
+              <div class="stat-label">Pending Verifications</div>
+              {% if total_pending_verifications > 0 %}
+              <div class="stat-change negative">
+                <i class="fas fa-clock"></i>
+                <span>Action required</span>
+              </div>
+              {% else %}
+              <div class="stat-change positive">
+                <i class="fas fa-check"></i>
+                <span>All caught up</span>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+          <div class="stat-card-footer">
+            <a href="/admin/admin_verify_creator">Review now <i class="fas fa-arrow-right"></i></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions & Recent Activity -->
+      <div class="dashboard-grid">
+        <!-- Quick Actions -->
+        <div class="dashboard-card quick-actions-card">
+          <div class="card-header">
+            <h3><i class="fas fa-bolt"></i> Quick Actions</h3>
+          </div>
+          <div class="card-body">
+            <div class="quick-actions">
+              <a href="/admin/admin_verify_creator" class="quick-action-item">
+                <div class="action-icon gradient-purple">
+                  <i class="fas fa-user-check"></i>
+                </div>
+                <div class="action-text">
+                  <span class="action-title">Verify Creators</span>
+                  <span class="action-subtitle">{{ pending_creator_verifications }} pending request(s)</span>
+                </div>
+                <i class="fas fa-chevron-right action-arrow"></i>
+              </a>
+
+              <a href="/admin/admin_verify_investor" class="quick-action-item">
+                <div class="action-icon gradient-blue">
+                  <i class="fas fa-user-tie"></i>
+                </div>
+                <div class="action-text">
+                  <span class="action-title">Verify Investors</span>
+                  <span class="action-subtitle">{{ pending_investor_verifications }} pending request(s)</span>
+                </div>
+                <i class="fas fa-chevron-right action-arrow"></i>
+              </a>
+
+              <a href="/user_management" class="quick-action-item">
+                <div class="action-icon gradient-green">
+                  <i class="fas fa-users"></i>
+                </div>
+                <div class="action-text">
+                  <span class="action-title">Manage Users</span>
+                  <span class="action-subtitle">View all registered users</span>
+                </div>
+                <i class="fas fa-chevron-right action-arrow"></i>
+              </a>
+
+              <a href="/admin_ideas" class="quick-action-item">
+                <div class="action-icon gradient-orange">
+                  <i class="fas fa-lightbulb"></i>
+                </div>
+                <div class="action-text">
+                  <span class="action-title">Review Ideas</span>
+                  <span class="action-subtitle">Moderate platform content</span>
+                </div>
+                <i class="fas fa-chevron-right action-arrow"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="dashboard-card activity-card">
+          <div class="card-header">
+            <h3><i class="fas fa-history"></i> Recent Activity</h3>
+            <a href="/admin_activity" class="view-all-link">View All</a>
+          </div>
+          <div class="card-body">
+            <div class="activity-list">
+              <div class="activity-item">
+                <div class="activity-icon activity-success">
+                  <i class="fas fa-users"></i>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-title">Platform Statistics</div>
+                  <div class="activity-description">{{ total_creators }} creators and {{ total_investors }} investors registered</div>
+                </div>
+                <div class="activity-time">Live</div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon activity-warning">
+                  <i class="fas fa-user-check"></i>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-title">Pending Verifications</div>
+                  <div class="activity-description">{{ total_pending_verifications }} account(s) awaiting review</div>
+                </div>
+                <div class="activity-time">Action needed</div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon activity-success">
+                  <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-title">Verified Accounts</div>
+                  <div class="activity-description">{{ total_verified }} users have been verified</div>
+                </div>
+                <div class="activity-time">Total</div>
+              </div>
+
+              <div class="activity-item">
+                <div class="activity-icon activity-info">
+                  <i class="fas fa-lightbulb"></i>
+                </div>
+                <div class="activity-content">
+                  <div class="activity-title">Ideas on Platform</div>
+                  <div class="activity-description">{{ total_ideas }} active ideas available</div>
+                </div>
+                <div class="activity-time">Current</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Section -->
+      <div class="charts-section">
+        <div class="dashboard-card chart-card">
+          <div class="card-header">
+            <h3><i class="fas fa-chart-bar"></i> User Distribution</h3>
+          </div>
+          <div class="card-body">
+            <div class="chart-placeholder">
+              <div class="chart-bars">
+                <div class="chart-bar"
+                     data-height="{{ creator_percent }}"
+                     data-label="Creators"></div>
+                <div class="chart-bar"
+                     data-height="{{ investor_percent }}"
+                     data-label="Investors"></div>
+                <div class="chart-bar"
+                     data-height="{{ verified_percent }}"
+                     data-label="Verified"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-card chart-card">
+          <div class="card-header">
+            <h3><i class="fas fa-chart-pie"></i> Platform Overview</h3>
+          </div>
+          <div class="card-body">
+            <div class="overview-stats">
+              <div class="overview-item">
+                <div class="overview-label">
+                  <span class="overview-dot dot-creators"></span>
+                  Total Creators
+                </div>
+                <div class="overview-value">{{ total_creators }}</div>
+              </div>
+              <div class="overview-item">
+                <div class="overview-label">
+                  <span class="overview-dot dot-investors"></span>
+                  Total Investors
+                </div>
+                <div class="overview-value">{{ total_investors }}</div>
+              </div>
+              <div class="overview-item">
+                <div class="overview-label">
+                  <span class="overview-dot dot-verified"></span>
+                  Verified Accounts
+                </div>
+                <div class="overview-value">{{ total_verified }}</div>
+              </div>
+              <div class="overview-item">
+                <div class="overview-label">
+                  <span class="overview-dot dot-active"></span>
+                  Pending Reviews
+                </div>
+                <div class="overview-value">{{ total_pending_verifications }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Sidebar Toggle - Only toggles sidebar visibility, doesn't shift main content
+  const sidebar = document.getElementById('sidebar');
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  const mainContent = document.getElementById('mainContent');
+
+  sidebarToggle.addEventListener('click', function() {
+    sidebar.classList.toggle('collapsed');
+  });
+
+  // Close sidebar when clicking outside on mobile
+  document.addEventListener('click', function(e) {
+    if (window.innerWidth <= 992) {
+      if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+        sidebar.classList.add('collapsed');
+      }
+    }
+  });
+
+  // Update current date
+  const dateElement = document.getElementById('currentDate');
+  const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+  dateElement.textContent = new Date().toLocaleDateString('en-US', options);
+
+  // Animate stats on load
+  document.addEventListener('DOMContentLoaded', function() {
+    const statCards = document.querySelectorAll('.stat-card');
+    statCards.forEach((card, index) => {
+      setTimeout(() => {
+        card.style.opacity = '1';
+        card.style.transform = 'translateY(0)';
+      }, index * 100);
+    });
+  });
+</script>
+
 </body>
 </html>
