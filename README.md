@@ -1,4 +1,4 @@
-# NURONA - Creator & Investor Platform
+# NEURONA - Creator & Investor Platform
 
 > Connecting visionary creators with investors through a secure, scalable, and intelligent innovation platform.
 
