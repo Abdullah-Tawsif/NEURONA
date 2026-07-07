@@ -1,11 +1,11 @@
 from fastapi import APIRouter, Depends, Request, Form, UploadFile, File
-from fastapi.responses import HTMLResponse, RedirectResponse
+from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from database.database import get_db
+from models.user import User
 from services.investor_service import get_investor_dashboard_data, create_investor_verification
-from services.investor_service import has_existing_verification
 from models.investor_verification import InvestorVerification
 
 router = APIRouter()
@@ -35,18 +35,17 @@ async def investor_dashboard(
 
 # verify_investor
 @router.get("/verify_investor", response_class=HTMLResponse)
-async def verify_invesor_page(request: Request, db: Session = Depends(get_db)):
+async def verify_investor_page(request: Request, db: Session = Depends(get_db)):
     user = request.session.get("user")
     if not user or user.get("role") != "investor":
         return RedirectResponse(url="/login", status_code=303)
-    
 
     existing = (
         db.query(InvestorVerification)
         .filter(InvestorVerification.user_id == user["id"])
         .first()
     )
-    if existing:
+    if existing and existing.status == "pending":
         return RedirectResponse(
             url="/investor_dashboard?already_submitted=1",
             status_code=303,
@@ -105,8 +104,7 @@ async def verify_investor(
         status_code=303,
     )
 
-#Investor Profile
-
+# Investor Profile
 @router.get("/investor_profile", response_class=HTMLResponse)
 async def investor_profile(request: Request, db: Session = Depends(get_db)):
 
@@ -121,7 +119,6 @@ async def investor_profile(request: Request, db: Session = Depends(get_db)):
         "total_invested": 0
     }
 
-    #  FIXED: Using explicit keyword arguments
     return templates.TemplateResponse(
         request=request,
         name="investor/investor_profile.html",
@@ -130,3 +127,21 @@ async def investor_profile(request: Request, db: Session = Depends(get_db)):
             "stats": stats
         }
     )
+
+
+# Dismiss verified popup
+@router.post("/dismiss_verified_popup")
+async def dismiss_verified_popup(
+    request: Request,
+    db: Session = Depends(get_db),
+):
+    user = request.session.get("user")
+    if not user:
+        return JSONResponse({"success": False}, status_code=401)
+
+    db_user = db.query(User).filter(User.id == user.get("id")).first()
+    if db_user:
+        db_user.verified_popup_shown = True
+        db.commit()
+
+    return JSONResponse({"success": True})
