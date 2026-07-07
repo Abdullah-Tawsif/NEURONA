@@ -10,6 +10,7 @@ def get_creator_dashboard_data(db: Session, user: dict) -> dict:
 
     if creator and creator.is_verified:
         verified = 1
+        show_verified_popup = not creator.verified_popup_shown
     else:
         existing = has_existing_verification(db, creator.id if creator else None)
         if existing:
@@ -19,11 +20,13 @@ def get_creator_dashboard_data(db: Session, user: dict) -> dict:
                 verified = 2
         else:
             verified = 0
+        show_verified_popup = False
 
     return {
         "creator_name": creator_name,
         "verified": verified,
         "creator_ideas": [],
+        "show_verified_popup": show_verified_popup,
     }
 
 
@@ -36,8 +39,20 @@ def create_creator_verification(
     linkedin_id,
     present_address,
 ):
-    if has_existing_verification(db, user_id) is not None:
-        return None
+    existing = has_existing_verification(db, user_id)
+
+    if existing:
+        if existing.status == "pending":
+            return None
+        existing.full_name = full_name
+        existing.phone = phone
+        existing.gov_id = gov_id
+        existing.linkedin_id = linkedin_id
+        existing.present_address = present_address
+        existing.status = "pending"
+        db.commit()
+        db.refresh(existing)
+        return existing
 
     verification = CreatorVerification(
         user_id=user_id,
