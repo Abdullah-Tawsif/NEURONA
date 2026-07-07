@@ -11,7 +11,7 @@
 
 ---
 
-# OVERVIEW
+### OVERVIEW
 
 Neurona is a modern full-stack platform designed to bridge the gap between **Creators** with innovative ideas and **Investors** seeking high-potential opportunities.
 
@@ -23,37 +23,37 @@ Designed with scalability and maintainability in mind, Neurona follows a modular
 
 ---
 
-# FEATURES
+### FEATURES
 
-### Authentication & Authorization
+#### Authentication & Authorization
 - Secure Registration & Login
 - Password Hashing
 - Session Authentication
 - Role-Based Access Control
 - Route Protection using Middleware
 
-### Creator Portal
+#### Creator Portal
 - Creator Dashboard
 - Project Submission
 - Idea Management
 - Profile Management
 - Verification System
 
-### Investor Portal
+#### Investor Portal
 - Investor Dashboard
 - Browse Innovative Projects
 - Express Investment Interest
 - Profile Verification
 - Saved Opportunities
 
-### Admin Portal
+#### Admin Portal
 - User Management
 - Creator Verification
 - Investor Verification
 - Platform Moderation
 - Analytics Dashboard
 
-### Security
+#### Security
 - Authentication Middleware
 - Input Validation
 - Error Handling
@@ -62,7 +62,7 @@ Designed with scalability and maintainability in mind, Neurona follows a modular
 
 ---
 
-# Backend Architecture
+### Backend Architecture
 
 Neurona follows a layered architecture to keep the application scalable and maintainable.
 
@@ -86,27 +86,27 @@ Business logic is separated from API routes, allowing the application to remain 
 
 ---
 
-# TECH STACK
+### TECH STACK
 
-## Backend
+#### Backend
 - FastAPI
 - Python
 - PostgreSQL
 
-## Frontend
+#### Frontend
 - HTML5
 - CSS3
 - Bootstrap 5
 - JavaScript
 
-## Development Tools
+#### Development Tools
 - Git
 - GitHub
 - VS Code
 
 ---
 
-# 📂 Project Structure
+### 📂 Project Structure
 
 ```text
 Neurona/
@@ -166,7 +166,7 @@ Neurona/
 
 ---
 
-# Key Highlights
+### Key Highlights
 
 - Modular FastAPI Architecture
 - Layered Backend Design
@@ -179,7 +179,7 @@ Neurona/
 
 ---
 
-# Development Progress
+### Development Progress
 
 | Module | Status |
 |---------|--------|
@@ -194,7 +194,7 @@ Neurona/
 
 ---
 
-# Upcoming Features
+### Upcoming Features
 
 - AI-powered Project Recommendation
 - Intelligent Investor Matching
@@ -209,19 +209,19 @@ Neurona/
 
 ---
 
-# Contributing
+### Contributing
 
 Contributions, suggestions, and feedback are welcome. Feel free to fork the repository, open issues, or submit pull requests.
 
 ---
 
-# License
+### License
 
 This project is licensed under the MIT License.
 
 ---
 
-# Developer
+### Developer
 
 **S.M. ABDULLAH TAWSIF**
 
