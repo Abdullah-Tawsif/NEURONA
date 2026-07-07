@@ -11,7 +11,7 @@
 
 ---
 
-### OVERVIEW
+### 📖 OVERVIEW
 
 Neurona is a modern full-stack platform designed to bridge the gap between **Creators** with innovative ideas and **Investors** seeking high-potential opportunities.
 
@@ -23,7 +23,7 @@ Designed with scalability and maintainability in mind, Neurona follows a modular
 
 ---
 
-### FEATURES
+### ✨ FEATURES
 
 #### Authentication & Authorization
 - Secure Registration & Login
@@ -62,7 +62,7 @@ Designed with scalability and maintainability in mind, Neurona follows a modular
 
 ---
 
-### Backend Architecture
+### 🏛️ Backend Architecture
 
 Neurona follows a layered architecture to keep the application scalable and maintainable.
 
@@ -86,7 +86,7 @@ Business logic is separated from API routes, allowing the application to remain 
 
 ---
 
-### TECH STACK
+### 🛠 TECH STACK
 
 #### Backend
 - FastAPI
@@ -179,7 +179,7 @@ Neurona/
 
 ---
 
-### Development Progress
+### 🚧 Development Progress
 
 | Module | Status |
 |---------|--------|
@@ -194,7 +194,7 @@ Neurona/
 
 ---
 
-### Upcoming Features
+### 🎯 Upcoming Features
 
 - AI-powered Project Recommendation
 - Intelligent Investor Matching
@@ -209,19 +209,19 @@ Neurona/
 
 ---
 
-### Contributing
+### 🤝 Contributing
 
 Contributions, suggestions, and feedback are welcome. Feel free to fork the repository, open issues, or submit pull requests.
 
 ---
 
-### License
+### 📄 License
 
 This project is licensed under the MIT License.
 
 ---
 
-### Developer
+### 📄 Developer
 
 **S.M. ABDULLAH TAWSIF**
 
