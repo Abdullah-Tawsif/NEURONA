@@ -13,7 +13,7 @@
 
 ## 📸 Preview
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/0d867258-03b4-4205-8981-624a3d29d00d" width="700">
+  <img src="https://github.com/user-attachments/assets/0d867258-03b4-4205-8981-624a3d29d00d" width="600">
 </p>
 
 <p align="center">
