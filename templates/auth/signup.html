@@ -3,68 +3,238 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>signup - Neurona</title>
+    <title>Sign Up - Neurona</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link rel="stylesheet" href="/static/css/auth/signup.css">
-    
 </head>
 <body class="login-body">
+
+    <!-- Modern Navigation Bar -->
+    <nav class="login-navbar">
+        <div class="navbar-container">
+            <a href="/" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Home</span>
+            </a>
+            <a href="/" class="brand-mini">
+                <img src="/static/images/logo_black.png" alt="Neurona" class="brand-logo-mini">
+            </a>
+            <div class="nav-links-mini">
+                <a href="/login" class="nav-link-mini-active">Sign In</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
     <div class="login-container">
+
         <div class="login-card">
-            <div class="login-header">
+
+            <!-- Card Header with Logo -->
+            <div class="login-card-header">
+                <div class="logo-circle">
+                    <i class="fas fa-user-plus"></i>
+                </div>
                 <h1 class="login-title">Create Account</h1>
-                <p class="login-subtitle">Sign up to get started</p>
+                <p class="login-subtitle">
+                    Join our community of innovators
+                </p>
             </div>
 
             {% if message %}
-            <div class="flash-message alert-danger">
-                <i class="fas fa-info-circle me-2"></i>
-                {{ message }}
+            <div class="flash-message {% if message_type == 'success' %}alert-success{% else %}alert-danger{% endif %}">
+                <div class="flash-icon">
+                    <i class="fas {% if message_type == 'success' %}fa-check-circle{% else %}fa-exclamation-circle{% endif %}"></i>
+                </div>
+                <span>{{ message }}</span>
             </div>
             {% endif %}
-            
 
-            <form method="POST" action="/signup" id="signupForm">
+            <form method="POST" action="/signup" id="signupForm" class="login-form" novalidate>
                 <div class="form-group">
-                    <label for="username" class="form-label">Username</label>
-                    <input required type="text" class="form-control" id="username" name="username" placeholder="Enter your username"/>
+                    <label for="username" class="form-label">
+                        <i class="fas fa-user"></i>
+                        Username
+                    </label>
+                    <div class="input-wrapper">
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="username"
+                            name="username"
+                            placeholder="Choose a username"
+                            required
+                            autocomplete="username"
+                        >
+                        <div class="input-focus-border"></div>
+                    </div>
+                    <div id="usernameHint" class="hint"></div>
                 </div>
+
                 <div class="form-group">
-                    <label for="email" class="form-label">Email address</label>
-                    <input required type="email" class="form-control" id="email" name="email" placeholder="Enter your email" />
+                    <label for="email" class="form-label">
+                        <i class="fas fa-envelope"></i>
+                        Email Address
+                    </label>
+                    <div class="input-wrapper">
+                        <input
+                            type="email"
+                            class="form-control"
+                            id="email"
+                            name="email"
+                            placeholder="Enter your email"
+                            required
+                            autocomplete="email"
+                        >
+                        <div class="input-focus-border"></div>
+                    </div>
                     <div id="emailHint" class="hint"></div>
                 </div>
+
                 <div class="form-group">
-                    <label for="password" class="form-label">Password</label>
-                    <input required type="password" class="form-control" id="password" name="password" placeholder="Create a password" />
+                    <label for="password" class="form-label">
+                        <i class="fas fa-lock"></i>
+                        Password
+                    </label>
+                    <div class="input-wrapper">
+                        <input
+                            type="password"
+                            class="form-control"
+                            id="password"
+                            name="password"
+                            placeholder="Create a strong password"
+                            required
+                            autocomplete="new-password"
+                        >
+                        <button type="button" class="toggle-password" onclick="togglePassword('password', 'eyeIcon1')">
+                            <i class="fas fa-eye" id="eyeIcon1"></i>
+                        </button>
+                        <div class="input-focus-border"></div>
+                    </div>
                     <div id="passwordHint" class="hint"></div>
+                    <div class="password-strength">
+                        <div class="strength-bar" id="strengthBar"></div>
+                    </div>
+                    <div class="password-requirements">
+                        <small id="reqLength"><i class="fas fa-circle"></i> At least 8 characters</small>
+                        <small id="reqSpecial"><i class="fas fa-circle"></i> One special character</small>
+                    </div>
                 </div>
+
                 <div class="form-group">
-                    <label for="confirm_password" class="form-label">Confirm Password</label>
-                    <input required type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm your password" />
+                    <label for="confirm_password" class="form-label">
+                        <i class="fas fa-shield-alt"></i>
+                        Confirm Password
+                    </label>
+                    <div class="input-wrapper">
+                        <input
+                            type="password"
+                            class="form-control"
+                            id="confirm_password"
+                            name="confirm_password"
+                            placeholder="Confirm your password"
+                            required
+                            autocomplete="new-password"
+                        >
+                        <button type="button" class="toggle-password" onclick="togglePassword('confirm_password', 'eyeIcon2')">
+                            <i class="fas fa-eye" id="eyeIcon2"></i>
+                        </button>
+                        <div class="input-focus-border"></div>
+                    </div>
                     <div id="confirmHint" class="hint"></div>
                 </div>
+
                 <div class="form-group">
-                    <label for="role" class="form-label">Role</label>
-                    <select class="form-select" id="role" name="role" required>
-                        <option value="">Select role</option>
-                        <option value="creator">Creator</option>
-                        <option value="investor">Investor</option>
-                    </select>
+                    <label for="role" class="form-label">
+                        <i class="fas fa-id-badge"></i>
+                        I want to join as
+                    </label>
+                    <div class="role-selection">
+                        <label class="role-option">
+                            <input type="radio" name="role" value="creator" required>
+                            <div class="role-card">
+                                <div class="role-icon">
+                                    <i class="fas fa-lightbulb"></i>
+                                </div>
+                                <div class="role-info">
+                                    <span class="role-title">Creator</span>
+                                    <span class="role-desc">Share innovative ideas</span>
+                                </div>
+                            </div>
+                        </label>
+                        <label class="role-option">
+                            <input type="radio" name="role" value="investor" required>
+                            <div class="role-card">
+                                <div class="role-icon">
+                                    <i class="fas fa-hand-holding-usd"></i>
+                                </div>
+                                <div class="role-info">
+                                    <span class="role-title">Investor</span>
+                                    <span class="role-desc">Fund great ideas</span>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
                 </div>
-                <button type="submit" class="login-btn" id="submitBtn" disabled>
-                    Signup
+
+                <div class="terms-checkbox">
+                    <label class="remember-me">
+                        <input type="checkbox" id="terms" required>
+                        <span class="checkmark"></span>
+                        <span>I agree to the <a href="/terms_of_service" target="_blank">Terms of Service</a> and <a href="/privacy_policy" target="_blank">Privacy Policy</a></span>
+                    </label>
+                </div>
+
+                <button type="submit" class="login-btn" id="submitBtn">
+                    <span>Create Account</span>
+                    <i class="fas fa-arrow-right"></i>
                 </button>
+
+                <!-- Social Login Divider -->
+                <div class="divider">
+                    <span>or sign up with</span>
+                </div>
+
+                <div class="social-buttons">
+                    <button type="button" class="social-btn google" onclick="alert('Google signup coming soon!')">
+                        <svg viewBox="0 0 24 24" width="20" height="20">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.23v2.84C4.08 20.72 7.76 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.27H2.23C1.47 8.76 1 10.5 1 12s.47 3.24 1.23 4.73l2.46 1.89 2.15-1.53z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.76 1 4.08 3.28 2.23 7.27l3.61 2.82c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        <span>Google</span>
+                    </button>
+
+                    <button type="button" class="social-btn linkedin" onclick="alert('LinkedIn signup coming soon!')">
+                        <svg viewBox="0 0 24 24" width="20" height="20" fill="#0A66C2">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+                        </svg>
+                        <span>LinkedIn</span>
+                    </button>
+                </div>
             </form>
 
             <div class="login-footer">
-                <p>Already have an account? <a href="/login">Login here</a></p>
+                <p>
+                    Already have an account?
+                    <a href="/login" class="signin-link">Sign in here</a>
+                </p>
             </div>
+
         </div>
+
+        <!-- Decorative Elements -->
+        <div class="decoration-circles">
+            <div class="circle circle-1"></div>
+            <div class="circle circle-2"></div>
+            <div class="circle circle-3"></div>
+        </div>
+
     </div>
-    
+
   <!-- JS -->
   <script src="/static/js/signup.js"></script>
 
