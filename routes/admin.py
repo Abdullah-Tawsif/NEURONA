@@ -64,18 +64,14 @@ def approve_investor(
     vid: int,
     db: Session = Depends(get_db),
 ):
-    user = request = None  # safety placeholder (ignored)
-
     v = db.query(InvestorVerification).filter_by(id=vid).first()
 
     if v:
         v.status = "approved"
-
         user = db.query(User).filter(User.id == v.user_id).first()
-
         if user:
             user.is_verified = True
-
+            user.verified_popup_shown = False
         db.commit()
 
     return RedirectResponse(
@@ -90,18 +86,15 @@ def reject_investor(
     vid: int,
     db: Session = Depends(get_db),
 ):
-
     v = db.query(InvestorVerification).filter_by(id=vid).first()
 
     if v:
         v.status = "rejected"
-
         user = db.query(User).filter(User.id == v.user_id).first()
-
-    if user:
-        user.is_verified = False
-
-    db.commit()
+        if user:
+            user.is_verified = False
+            user.verified_popup_shown = False
+        db.commit()
 
     return RedirectResponse(
         url="/admin/admin_verify_investor",
@@ -138,17 +131,15 @@ def approve_creator(
     vid: int,
     db: Session = Depends(get_db),
 ):
-    user = request = None  # safety placeholder (ignored)
-
     v = db.query(CreatorVerification).filter_by(id=vid).first()
 
     if v:
         v.status = "approved"
         user = db.query(User).filter(User.id == v.user_id).first()
-
-    if user:
-        user.is_verified = True
-    db.commit()
+        if user:
+            user.is_verified = True
+            user.verified_popup_shown = False
+        db.commit()
 
     return RedirectResponse(
         url="/admin/admin_verify_creator",
@@ -162,15 +153,14 @@ def reject_creator(
     vid: int,
     db: Session = Depends(get_db),
 ):
-
     v = db.query(CreatorVerification).filter_by(id=vid).first()
 
     if v:
         v.status = "rejected"
         user = db.query(User).filter(User.id == v.user_id).first()
-
         if user:
             user.is_verified = False
+            user.verified_popup_shown = False
         db.commit()
 
     return RedirectResponse(
