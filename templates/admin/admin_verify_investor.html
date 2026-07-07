@@ -1,98 +1,322 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Investor Verification - Admin</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/css/admin/admin_verify_investor.css">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Investor Verification - Admin Panel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/static/css/admin/admin_dashboard.css">
+  <link rel="stylesheet" href="/static/css/admin/admin_verify.css">
 </head>
-
 <body>
 
-<div class="container">
+<div class="admin-wrapper">
 
-<div class="header">Investor Verification Requests</div>
-
-{% for v in verifications %}
-
-<div class="card">
-
-    <div>
-        {% if v.status == "pending" %}
-            <span class="status pending">Pending</span>
-        {% elif v.status == "approved" %}
-            <span class="status approved">Approved</span>
-        {% else %}
-            <span class="status rejected">Rejected</span>
-        {% endif %}
+  <!-- Modern Sidebar -->
+  <aside class="admin-sidebar collapsed" id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-container">
+        <img src="/static/images/logo_white.png" alt="Neurona" class="brand-logo">
+        <div class="brand-text">
+          <span class="brand-name">Neurona</span>
+          <span class="brand-tagline">Admin Panel</span>
+        </div>
+      </div>
     </div>
 
-    <div class="grid">
-        <div>
-            <div class="label">Full Name</div>
-            <div class="value">{{ v.full_name }}</div>
-        </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <span class="nav-section-title">Main Menu</span>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="/admin" class="nav-link">
+              <span class="nav-icon"><i class="fas fa-th-large"></i></span>
+              <span class="nav-text">Dashboard</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/user_management" class="nav-link">
+              <span class="nav-icon"><i class="fas fa-users"></i></span>
+              <span class="nav-text">User Management</span>
+              <span class="nav-badge">{{ total_users }}</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/admin_ideas" class="nav-link">
+              <span class="nav-icon"><i class="fas fa-lightbulb"></i></span>
+              <span class="nav-text">Ideas</span>
+            </a>
+          </li>
+        </ul>
+      </div>
 
-        <div>
-            <div class="label">Phone</div>
-            <div class="value">{{ v.phone }}</div>
-        </div>
+      <div class="nav-section">
+        <span class="nav-section-title">Verification</span>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="/admin/admin_verify_creator" class="nav-link">
+              <span class="nav-icon"><i class="fas fa-user-check"></i></span>
+              <span class="nav-text">Creators</span>
+              {% if pending_creator_verifications > 0 %}
+              <span class="nav-badge warning">{{ pending_creator_verifications }}</span>
+              {% endif %}
+            </a>
+          </li>
+          <li class="nav-item active">
+            <a href="/admin/admin_verify_investor" class="nav-link">
+              <span class="nav-icon"><i class="fas fa-user-tie"></i></span>
+              <span class="nav-text">Investors</span>
+              {% if pending_investor_verifications > 0 %}
+              <span class="nav-badge warning">{{ pending_investor_verifications }}</span>
+              {% endif %}
+            </a>
+          </li>
+        </ul>
+      </div>
 
-        <div>
-            <div class="label">Gov ID</div>
-            <div class="value">{{ v.gov_id }}</div>
-        </div>
+      <div class="nav-section">
+        <span class="nav-section-title">Finance</span>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="/admin_transactions" class="nav-link">
+              <span class="nav-icon"><i class="fas fa-exchange-alt"></i></span>
+              <span class="nav-text">Transactions</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/admin_withdrawals" class="nav-link">
+              <span class="nav-icon"><i class="fas fa-wallet"></i></span>
+              <span class="nav-text">Withdrawals</span>
+            </a>
+          </li>
+        </ul>
+      </div>
 
-        <div>
-            <div class="label">LinkedIn</div>
-            <div class="value">
-                <a href="{{ v.linkedin_id }}" target="_blank" style="color:#60a5fa;">
-                    Open Profile
-                </a>
+      <div class="nav-section nav-section-bottom">
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="/admin_settings" class="nav-link">
+              <span class="nav-icon"><i class="fas fa-cog"></i></span>
+              <span class="nav-text">Settings</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="/logout" class="nav-link logout-link">
+              <span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span>
+              <span class="nav-text">Logout</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="admin-main" id="mainContent">
+    <!-- Top Header -->
+    <header class="admin-header">
+      <div class="header-left">
+        <button class="sidebar-toggle" id="sidebarToggle">
+          <i class="fas fa-bars"></i>
+        </button>
+        <div class="breadcrumb-wrapper">
+          <span class="breadcrumb-item"><a href="/admin">Admin</a></span>
+          <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+          <span class="breadcrumb-item active">Investor Verification</span>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <div class="header-actions">
+          <button class="header-btn notification-btn">
+            <i class="fas fa-bell"></i>
+            {% if total_pending_verifications > 0 %}
+            <span class="notification-dot"></span>
+            {% endif %}
+          </button>
+
+          <div class="header-divider"></div>
+
+          <div class="user-menu">
+            <div class="user-avatar">
+              <i class="fas fa-user-shield"></i>
             </div>
+            <div class="user-info">
+              <span class="user-name">{{ username }}</span>
+              <span class="user-role">Administrator</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Page Content -->
+    <div class="admin-content">
+      <!-- Page Header -->
+      <div class="page-header">
+        <div class="page-header-content">
+          <div class="page-title-section">
+            <h1><i class="fas fa-user-tie"></i> Investor Verification</h1>
+            <p>Review and verify investor accounts</p>
+          </div>
+          <div class="page-stats">
+            <div class="stat-badge pending-badge">
+              <span class="badge-count">{{ pending_investor_verifications }}</span>
+              <span class="badge-label">Pending</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Verification Cards -->
+      <div class="verification-grid">
+        {% for v in verifications %}
+        <div class="verification-card">
+          <div class="card-top">
+            <div class="user-info-section">
+              <div class="user-avatar-large investor-avatar">
+                <i class="fas fa-user-tie"></i>
+              </div>
+              <div class="user-main-info">
+                <h3 class="user-fullname">{{ v.full_name }}</h3>
+                <span class="user-id">ID: #{{ v.user_id }}</span>
+              </div>
+            </div>
+            <div class="status-badge {{ v.status }}">
+              {% if v.status == "pending" %}
+                <i class="fas fa-clock"></i>
+                <span>Pending</span>
+              {% elif v.status == "approved" %}
+                <i class="fas fa-check-circle"></i>
+                <span>Approved</span>
+              {% else %}
+                <i class="fas fa-times-circle"></i>
+                <span>Rejected</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="card-info-grid">
+            <div class="info-field">
+              <div class="field-label">
+                <i class="fas fa-phone"></i>
+                Phone
+              </div>
+              <div class="field-value">{{ v.phone }}</div>
+            </div>
+
+            <div class="info-field">
+              <div class="field-label">
+                <i class="fas fa-id-card"></i>
+                Gov ID
+              </div>
+              <div class="field-value">{{ v.gov_id }}</div>
+            </div>
+
+            <div class="info-field">
+              <div class="field-label">
+                <i class="fab fa-linkedin"></i>
+                LinkedIn
+              </div>
+              <div class="field-value">
+                <a href="{{ v.linkedin_id }}" target="_blank" class="profile-link">
+                  View Profile <i class="fas fa-external-link-alt"></i>
+                </a>
+              </div>
+            </div>
+
+            <div class="info-field">
+              <div class="field-label">
+                <i class="fas fa-file-alt"></i>
+                Bank Statement
+              </div>
+              <div class="field-value">
+                <a href="/{{ v.mandatory_doc }}" target="_blank" class="profile-link doc-link">
+                  <i class="fas fa-file-pdf"></i>
+                  View Document
+                </a>
+              </div>
+            </div>
+
+            <div class="info-field full-width">
+              <div class="field-label">
+                <i class="fas fa-map-marker-alt"></i>
+                Address
+              </div>
+              <div class="field-value">{{ v.present_address }}</div>
+            </div>
+
+            {% if v.optional_doc %}
+            <div class="info-field full-width">
+              <div class="field-label">
+                <i class="fas fa-file-plus"></i>
+                Additional Document
+              </div>
+              <div class="field-value">
+                <a href="/{{ v.optional_doc }}" target="_blank" class="profile-link doc-link">
+                  <i class="fas fa-file-pdf"></i>
+                  View Document
+                </a>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+
+          {% if v.status == "pending" %}
+          <div class="card-actions">
+            <form method="post" action="/admin/investor/approve/{{ v.id }}">
+              <button type="submit" class="action-btn approve-btn">
+                <i class="fas fa-check"></i>
+                Approve
+              </button>
+            </form>
+            <form method="post" action="/admin/investor/reject/{{ v.id }}">
+              <button type="submit" class="action-btn reject-btn">
+                <i class="fas fa-times"></i>
+                Reject
+              </button>
+            </form>
+          </div>
+          {% endif %}
         </div>
 
-        <div style="grid-column: span 2;">
-            <div class="label">Address</div>
-            <div class="value">{{ v.present_address }}</div>
+        {% empty %}
+        <div class="empty-state">
+          <div class="empty-icon">
+            <i class="fas fa-inbox"></i>
+          </div>
+          <h3>No Verification Requests</h3>
+          <p>There are no investor verification requests at this time.</p>
         </div>
-    </div>
-
-    <hr style="border:0; border-top:1px solid #2a3142; margin:15px 0;">
-
-    <div class="label">Mandatory Document</div>
-    <a class="file-link" href="/{{ v.mandatory_doc }}" target="_blank">
-        View File
-    </a>
-
-    {% if v.optional_doc %}
-    <div class="label" style="margin-top:10px;">Optional Document</div>
-    <a class="file-link" href="/{{ v.optional_doc }}" target="_blank">
-        View File
-    </a>
-    {% endif %}
-
-    {% if v.status == "pending" %}
-    <div class="actions">
-
-        <form method="post" action="/admin/investor/approve/{{ v.id }}">
-            <button class="btn approve" type="submit">Accept</button>
-        </form>
-
-        <form method="post" action="/admin/investor/reject/{{ v.id }}">
-            <button class="btn reject" type="submit">Reject</button>
-        </form>
+        {% endfor %}
+      </div>
 
     </div>
-    {% endif %}
+  </main>
 
 </div>
 
-{% endfor %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Sidebar Toggle
+  const sidebar = document.getElementById('sidebar');
+  const sidebarToggle = document.getElementById('sidebarToggle');
 
-</div>
+  sidebarToggle.addEventListener('click', function() {
+    sidebar.classList.toggle('collapsed');
+  });
+
+  // Close sidebar when clicking outside on mobile
+  document.addEventListener('click', function(e) {
+    if (window.innerWidth <= 992) {
+      if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+        sidebar.classList.add('collapsed');
+      }
+    }
+  });
+</script>
 
 </body>
 </html>
