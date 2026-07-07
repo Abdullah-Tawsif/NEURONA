@@ -11,6 +11,18 @@
 
 ---
 
+## 📸 Preview
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/0d867258-03b4-4205-8981-624a3d29d00d" width="900">
+</p>
+
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/363356a4-252f-43da-9cc6-12a48376a7ea" width="445">
+  <img src="https://github.com/user-attachments/assets/87d8ba7c-240d-4409-9fc4-eb9d51e28ba2" width="445">
+</p>
+
+---
+
 ### 📖 OVERVIEW
 
 Neurona is a modern full-stack platform designed to bridge the gap between **Creators** with innovative ideas and **Investors** seeking high-potential opportunities.
