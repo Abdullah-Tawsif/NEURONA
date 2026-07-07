@@ -4,7 +4,6 @@ from sqlalchemy import Boolean, Column, DateTime, Integer, String
 from database.database import Base
 
 
-
 class User(Base):
     __tablename__ = "users"
 
@@ -15,4 +14,5 @@ class User(Base):
     role = Column(String, nullable=False)
     is_verified = Column(Boolean, default=False)
     is_active = Column(Boolean, default=True)
+    verified_popup_shown = Column(Boolean, default=False)
     created_at = Column(DateTime, default=lambda: datetime.now(timezone.utc))
