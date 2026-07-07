@@ -1,0 +1,369 @@
+/* ============================================
+   VERIFICATION PAGE STYLES - Matching Theme
+   ============================================ */
+
+/* Page Header */
+.page-header {
+  margin-bottom: 28px;
+}
+
+.page-header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.page-title-section h1 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.page-title-section h1 i {
+  color: var(--primary);
+  font-size: 22px;
+}
+
+.page-title-section p {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.page-stats {
+  display: flex;
+  gap: 14px;
+}
+
+.stat-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 20px;
+  border-radius: var(--radius-md);
+  gap: 4px;
+}
+
+.pending-badge {
+  background: var(--warning-light);
+  border: 1px solid rgba(245, 158, 11, 0.2);
+}
+
+.badge-count {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--warning);
+}
+
+.badge-label {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+/* Verification Grid */
+.verification-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
+  gap: 20px;
+}
+
+/* Verification Card */
+.verification-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.verification-card:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-top {
+  padding: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--bg-card-hover);
+}
+
+.user-info-section {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.user-avatar-large {
+  width: 48px;
+  height: 48px;
+  background: var(--gradient-primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  color: white;
+}
+
+.user-avatar-large.investor-avatar {
+  background: var(--gradient-blue);
+}
+
+.user-main-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-fullname {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.user-id {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-family: monospace;
+}
+
+.status-badge {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.status-badge.pending {
+  background: var(--warning-light);
+  color: var(--warning);
+}
+
+.status-badge.approved {
+  background: var(--success-light);
+  color: var(--success);
+}
+
+.status-badge.rejected {
+  background: var(--error-light);
+  color: var(--error);
+}
+
+.status-badge i {
+  font-size: 12px;
+}
+
+.card-info-grid {
+  padding: 22px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.info-field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.info-field.full-width {
+  grid-column: span 2;
+}
+
+.field-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.field-label i {
+  font-size: 11px;
+  color: var(--primary);
+}
+
+.field-value {
+  font-size: 14px;
+  color: var(--text-primary);
+  word-break: break-word;
+}
+
+.profile-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.profile-link:hover {
+  color: var(--primary-dark);
+}
+
+.profile-link i {
+  font-size: 11px;
+}
+
+.profile-link.doc-link {
+  background: var(--bg-card-hover);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+}
+
+.profile-link.doc-link:hover {
+  background: rgba(59, 130, 246, 0.1);
+}
+
+.card-actions {
+  padding: 18px 22px;
+  display: flex;
+  gap: 10px;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-card-hover);
+}
+
+.card-actions form {
+  flex: 1;
+}
+
+.action-btn {
+  width: 100%;
+  padding: 12px 20px;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: all 0.2s ease;
+}
+
+.approve-btn {
+  background: var(--success-light);
+  color: var(--success);
+  border: 1px solid rgba(16, 185, 129, 0.2);
+}
+
+.approve-btn:hover {
+  background: var(--success);
+  color: white;
+}
+
+.reject-btn {
+  background: var(--error-light);
+  color: var(--error);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.reject-btn:hover {
+  background: var(--error);
+  color: white;
+}
+
+/* Empty State */
+.empty-state {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  text-align: center;
+}
+
+.empty-icon {
+  width: 72px;
+  height: 72px;
+  background: var(--bg-card-hover);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.empty-icon i {
+  font-size: 28px;
+  color: var(--text-muted);
+}
+
+.empty-state h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+
+.empty-state p {
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (max-width: 1200px) {
+  .verification-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-header-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .card-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .info-field.full-width {
+    grid-column: span 1;
+  }
+
+  .card-top {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  .card-actions {
+    flex-direction: column;
+  }
+
+  .card-actions form {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .verification-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-title-section h1 {
+    font-size: 20px;
+  }
+}
