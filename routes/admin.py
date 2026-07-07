@@ -46,6 +46,7 @@ def investor_verifications(
     if not user or user.get("role") != "admin":
         return RedirectResponse(url="/login", status_code=303)
 
+    stats = get_admin_stats(db)
     verifications = db.query(InvestorVerification).all()
 
     return templates.TemplateResponse(
@@ -54,6 +55,7 @@ def investor_verifications(
         context={
             "username": user.get("username", "Admin"),
             "verifications": verifications,
+            **stats,
         },
     )
 
@@ -113,6 +115,7 @@ def creator_verifications(
     if not user or user.get("role") != "admin":
         return RedirectResponse(url="/login", status_code=303)
 
+    stats = get_admin_stats(db)
     verifications = db.query(CreatorVerification).all()
 
     return templates.TemplateResponse(
@@ -121,6 +124,7 @@ def creator_verifications(
         context={
             "username": user.get("username", "Admin"),
             "verifications": verifications,
+            **stats,
         },
     )
 
