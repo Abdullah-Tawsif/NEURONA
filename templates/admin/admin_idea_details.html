@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Idea Details - Admin Panel</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="stylesheet" href="/static/css/admin/admin_dashboard.css">
+  <style>
+    .idea-detail-content {
+      max-width: 900px;
+    }
+    .detail-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 25px;
+      margin-bottom: 20px;
+    }
+    .detail-card h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--border-light);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .detail-card h3 i { color: var(--primary); }
+    .detail-item {
+      display: flex;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    .detail-label {
+      font-weight: 600;
+      color: var(--text-muted);
+      min-width: 160px;
+      flex-shrink: 0;
+    }
+    .detail-value {
+      color: var(--text-primary);
+      flex: 1;
+    }
+    .product-images-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .product-images-grid img {
+      width: 140px;
+      height: 140px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+    }
+    .founder-item, .investor-item {
+      padding: 10px 14px;
+      background: var(--bg-card-hover);
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="admin-wrapper">
+  <aside class="admin-sidebar collapsed" id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand-container">
+        <img src="/static/images/logo_white.png" alt="Neurona" class="brand-logo">
+        <div class="brand-text">
+          <span class="brand-name">Neurona</span>
+          <span class="brand-tagline">Admin Panel</span>
+        </div>
+      </div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <span class="nav-section-title">Main Menu</span>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="/admin" class="nav-link"><span class="nav-icon"><i class="fas fa-th-large"></i></span><span class="nav-text">Dashboard</span></a>
+          </li>
+          <li class="nav-item">
+            <a href="/user_management" class="nav-link"><span class="nav-icon"><i class="fas fa-users"></i></span><span class="nav-text">User Management</span></a>
+          </li>
+          <li class="nav-item active">
+            <a href="/admin_ideas" class="nav-link"><span class="nav-icon"><i class="fas fa-lightbulb"></i></span><span class="nav-text">Ideas</span></a>
+          </li>
+        </ul>
+      </div>
+      <div class="nav-section nav-section-bottom">
+        <ul class="nav-list">
+          <li class="nav-item"><a href="/logout" class="nav-link logout-link"><span class="nav-icon"><i class="fas fa-sign-out-alt"></i></span><span class="nav-text">Logout</span></a></li>
+        </ul>
+      </div>
+    </nav>
+  </aside>
+
+  <main class="admin-main" id="mainContent">
+    <header class="admin-header">
+      <div class="header-left">
+        <button class="sidebar-toggle" id="sidebarToggle"><i class="fas fa-bars"></i></button>
+        <div class="breadcrumb-wrapper">
+          <span class="breadcrumb-item"><a href="/admin">Admin</a></span>
+          <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+          <span class="breadcrumb-item"><a href="/admin_ideas">Ideas</a></span>
+          <span class="breadcrumb-divider"><i class="fas fa-chevron-right"></i></span>
+          <span class="breadcrumb-item active">{{ idea.submission_id }}</span>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="user-menu">
+          <div class="user-avatar"><i class="fas fa-user-shield"></i></div>
+          <div class="user-info">
+            <span class="user-name">{{ username }}</span>
+            <span class="user-role">Administrator</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="admin-content">
+      <div class="idea-detail-content">
+        <div class="detail-card">
+          <h3><i class="fas fa-lightbulb"></i> {{ idea.title }}</h3>
+          <div class="detail-item"><div class="detail-label">Submission ID:</div><div class="detail-value" style="font-family:monospace;color:var(--primary);font-weight:600;">{{ idea.submission_id }}</div></div>
+          <div class="detail-item"><div class="detail-label">Creator:</div><div class="detail-value">{{ creator.username if creator else 'Unknown' }} ({{ creator.email if creator else '' }})</div></div>
+          <div class="detail-item"><div class="detail-label">Status:</div><div class="detail-value">{{ idea.status|capitalize }}</div></div>
+          <div class="detail-item"><div class="detail-label">Submitted:</div><div class="detail-value">{{ idea.created_at.strftime('%B %d, %Y at %H:%M') }}</div></div>
+        </div>
+
+        <div class="detail-card">
+          <h3><i class="fas fa-info-circle"></i> Basic Information</h3>
+          <div class="detail-item"><div class="detail-label">Category:</div><div class="detail-value">{{ idea.category }}{% if idea.other_category %} ({{ idea.other_category }}){% endif %}</div></div>
+          <div class="detail-item"><div class="detail-label">Current Status:</div><div class="detail-value">{{ idea.current_status }}</div></div>
+          <div class="detail-item"><div class="detail-label">Tags:</div><div class="detail-value">{{ idea.tags }}</div></div>
+          <div class="detail-item"><div class="detail-label">Target Market:</div><div class="detail-value">{{ idea.target_market }}</div></div>
+          <div class="detail-item"><div class="detail-label">Summary:</div><div class="detail-value">{{ idea.summary }}</div></div>
+          <div class="detail-item"><div class="detail-label">Problem:</div><div class="detail-value">{{ idea.problem_statement }}</div></div>
+          <div class="detail-item"><div class="detail-label">Solution:</div><div class="detail-value">{{ idea.proposed_solution }}</div></div>
+        </div>
+
+        <div class="detail-card">
+          <h3><i class="fas fa-address-card"></i> Contact Information</h3>
+          <div class="detail-item"><div class="detail-label">Full Name:</div><div class="detail-value">{{ idea.full_name }}</div></div>
+          <div class="detail-item"><div class="detail-label">Email:</div><div class="detail-value">{{ idea.email }}</div></div>
+          <div class="detail-item"><div class="detail-label">Contact:</div><div class="detail-value">{{ idea.contact_number }}</div></div>
+          <div class="detail-item"><div class="detail-label">Founders:</div><div class="detail-value">
+            {% for f in founders %}<div class="founder-item">{{ f.name }} ({{ f.role }}) - <a href="{{ f.linkedin }}" target="_blank" style="color:var(--primary);">LinkedIn</a></div>{% endfor %}
+          </div></div>
+          <div class="detail-item"><div class="detail-label">Website:</div><div class="detail-value">{{ idea.company_website or 'N/A' }}</div></div>
+          <div class="detail-item"><div class="detail-label">Team Size:</div><div class="detail-value">{{ idea.team_size }}</div></div>
+          <div class="detail-item"><div class="detail-label">Address:</div><div class="detail-value">{{ idea.address }}</div></div>
+          <div class="detail-item"><div class="detail-label">Country:</div><div class="detail-value">{{ idea.country }}</div></div>
+        </div>
+
+        <div class="detail-card">
+          <h3><i class="fas fa-money-bill-wave"></i> Funding Details</h3>
+          <div class="detail-item"><div class="detail-label">Funding Goal:</div><div class="detail-value">{{ idea.funding_goal }} {{ idea.currency }}</div></div>
+          <div class="detail-item"><div class="detail-label">Product Stage:</div><div class="detail-value">{{ idea.product_stage }}</div></div>
+          <div class="detail-item"><div class="detail-label">Equity Offered:</div><div class="detail-value">{{ idea.equity_offered }}%</div></div>
+          <div class="detail-item"><div class="detail-label">Funding Usage:</div><div class="detail-value">{{ idea.funding_usage }}</div></div>
+          <div class="detail-item"><div class="detail-label">Timeline:</div><div class="detail-value">{{ idea.expected_timeline }}</div></div>
+          <div class="detail-item"><div class="detail-label">Revenue Status:</div><div class="detail-value">{{ idea.revenue_status }}</div></div>
+          {% if idea.monthly_revenue %}<div class="detail-item"><div class="detail-label">Monthly Revenue:</div><div class="detail-value">{{ idea.monthly_revenue }}</div></div>{% endif %}
+          <div class="detail-item"><div class="detail-label">Existing Investors:</div><div class="detail-value">
+            {% if existing_investors and existing_investors|length > 0 %}
+            {% for inv in existing_investors %}<div class="investor-item">{{ inv.name }}: {{ inv.amount }}</div>{% endfor %}
+            {% else %}None{% endif %}
+          </div></div>
+          <div class="detail-item"><div class="detail-label">Intellectual Property:</div><div class="detail-value">{{ idea.intellectual_property or 'None' }}</div></div>
+        </div>
+
+        <div class="detail-card">
+          <h3><i class="fas fa-images"></i> Product Images</h3>
+          <div class="product-images-grid">
+            {% for img in product_images %}<img src="/{{ img }}" alt="Product Image {{ loop.index }}">{% endfor %}
+          </div>
+        </div>
+
+        <div class="detail-card">
+          <h3><i class="fas fa-file-alt"></i> Documents</h3>
+          <div class="detail-item"><div class="detail-label">Business Plan:</div><div class="detail-value">
+            {% if idea.business_plan_path %}<a href="/{{ idea.business_plan_path }}" target="_blank" style="color:var(--primary);">View Document</a>{% else %}N/A{% endif %}
+          </div></div>
+          {% if ip_docs and ip_docs|length > 0 %}
+          <div class="detail-item"><div class="detail-label">IP Documents:</div><div class="detail-value">
+            {% for doc in ip_docs %}<div><a href="/{{ doc }}" target="_blank" style="color:var(--primary);">Document {{ loop.index }}</a></div>{% endfor %}
+          </div></div>
+          {% endif %}
+          {% if idea.product_demo_url %}<div class="detail-item"><div class="detail-label">Demo URL:</div><div class="detail-value"><a href="{{ idea.product_demo_url }}" target="_blank" style="color:var(--primary);">View Demo</a></div></div>{% endif %}
+        </div>
+
+        <a href="/admin_ideas" class="btn btn-secondary" style="background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-secondary);padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:500;">
+          <i class="fas fa-arrow-left"></i> Back to Ideas
+        </a>
+
+        {% if idea.status != 'approved' and idea.status != 'rejected' %}
+        <div class="detail-card" style="margin-top:20px;">
+          <h3><i class="fas fa-gavel"></i> Admin Actions</h3>
+          <form method="POST" action="/admin_idea_status/{{ idea.id }}" style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start;">
+            <button type="submit" name="status" value="approved" class="btn btn-success" style="background:#16a34a;border:none;color:#fff;padding:10px 24px;border-radius:8px;font-weight:600;cursor:pointer;">
+              <i class="fas fa-check-circle"></i> Approve
+            </button>
+            <button type="submit" name="status" value="changes_requested" class="btn btn-warning" style="background:#f59e0b;border:none;color:#fff;padding:10px 24px;border-radius:8px;font-weight:600;cursor:pointer;">
+              <i class="fas fa-edit"></i> Request Changes
+            </button>
+            <button type="submit" name="status" value="rejected" class="btn btn-danger" style="background:#dc2626;border:none;color:#fff;padding:10px 24px;border-radius:8px;font-weight:600;cursor:pointer;">
+              <i class="fas fa-times-circle"></i> Reject
+            </button>
+          </form>
+        </div>
+        {% elif idea.status == 'approved' %}
+        <div class="detail-card" style="margin-top:20px;border-color:#16a34a;">
+          <h3 style="color:#16a34a;"><i class="fas fa-check-circle"></i> Approved</h3>
+          <p style="color:var(--text-muted);font-size:14px;">This idea has been approved.</p>
+          <form method="POST" action="/admin_idea_status/{{ idea.id }}" style="display:flex;gap:12px;flex-wrap:wrap;">
+            <button type="submit" name="status" value="reviewing" class="btn btn-secondary" style="background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-secondary);padding:10px 24px;border-radius:8px;font-weight:600;cursor:pointer;">
+              <i class="fas fa-undo"></i> Reopen Review
+            </button>
+            <button type="submit" name="status" value="rejected" class="btn btn-danger" style="background:#dc2626;border:none;color:#fff;padding:10px 24px;border-radius:8px;font-weight:600;cursor:pointer;">
+              <i class="fas fa-times-circle"></i> Reject
+            </button>
+          </form>
+        </div>
+        {% elif idea.status == 'rejected' %}
+        <div class="detail-card" style="margin-top:20px;border-color:#dc2626;">
+          <h3 style="color:#dc2626;"><i class="fas fa-times-circle"></i> Rejected</h3>
+          <p style="color:var(--text-muted);font-size:14px;">This idea has been rejected.</p>
+          <form method="POST" action="/admin_idea_status/{{ idea.id }}" style="display:flex;gap:12px;flex-wrap:wrap;">
+            <button type="submit" name="status" value="approved" class="btn btn-success" style="background:#16a34a;border:none;color:#fff;padding:10px 24px;border-radius:8px;font-weight:600;cursor:pointer;">
+              <i class="fas fa-check-circle"></i> Approve
+            </button>
+            <button type="submit" name="status" value="reviewing" class="btn btn-secondary" style="background:var(--bg-card);border:1px solid var(--border-color);color:var(--text-secondary);padding:10px 24px;border-radius:8px;font-weight:600;cursor:pointer;">
+              <i class="fas fa-undo"></i> Reopen Review
+            </button>
+          </form>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const sidebar = document.getElementById('sidebar');
+  const sidebarToggle = document.getElementById('sidebarToggle');
+  sidebarToggle.addEventListener('click', function() { sidebar.classList.toggle('collapsed'); });
+</script>
+
+</body>
+</html>
