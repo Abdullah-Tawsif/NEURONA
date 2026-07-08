@@ -42,19 +42,20 @@
 }
 
 /* ========================================
-   BACKGROUND & LAYOUT
+   BACKGROUND & LAYOUT - Premium Monochrome
    ======================================== */
 
 .login-body {
-    background: linear-gradient(135deg, var(--bg-darker) 0%, var(--navy-dark) 50%, var(--bg-dark) 100%);
     min-height: 100vh;
     display: flex;
     flex-direction: column;
     font-family: 'Poppins', sans-serif;
     position: relative;
     overflow-x: hidden;
+    background: #0a0a0a;
 }
 
+/* Primary gradient layer */
 .login-body::before {
     content: '';
     position: fixed;
@@ -63,11 +64,29 @@
     right: 0;
     bottom: 0;
     background:
-        radial-gradient(circle at 20% 80%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(255, 255, 255, 0.01) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(255, 255, 255, 0.01) 0%, transparent 50%);
+        radial-gradient(ellipse 120% 80% at 80% 20%, rgba(40, 40, 40, 0.4) 0%, transparent 50%),
+        radial-gradient(ellipse 100% 100% at 20% 80%, rgba(30, 30, 30, 0.35) 0%, transparent 45%),
+        radial-gradient(ellipse 80% 60% at 50% 50%, rgba(50, 50, 50, 0.2) 0%, transparent 60%),
+        linear-gradient(160deg, #0a0a0a 0%, #111111 25%, #0d0d0d 50%, #151515 75%, #0a0a0a 100%);
     pointer-events: none;
     z-index: 0;
+}
+
+/* Secondary mesh/grid pattern overlay */
+.login-body::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 60px 60px;
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
 }
 
 /* ========================================
@@ -796,7 +815,7 @@
 }
 
 /* ========================================
-   DECORATIVE ELEMENTS (Stripped Down To Soft White Glows)
+   DECORATIVE ELEMENTS - Premium Glows
    ======================================== */
 
 .decoration-circles {
@@ -813,23 +832,81 @@
 .circle {
     position: absolute;
     border-radius: 50%;
-    opacity: 0.02; /* Extremely faint ambient mist */
 }
 
+/* Large primary glow - top right */
 .circle-1 {
-    width: 400px;
-    height: 400px;
-    background: radial-gradient(circle, #ffffff 0%, transparent 70%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(180, 180, 180, 0.08) 0%, rgba(120, 120, 120, 0.04) 30%, transparent 70%);
     top: -200px;
-    right: -100px;
+    right: -150px;
+    animation: floatGlow1 12s ease-in-out infinite;
 }
 
+/* Secondary glow - bottom left */
 .circle-2 {
-    width: 300px;   
-    height: 300px;
-    background: radial-gradient(circle, #ffffff 0%, transparent 70%);
-    bottom: -150px;
-    left: -150px;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(160, 160, 160, 0.06) 0%, rgba(100, 100, 100, 0.03) 35%, transparent 70%);
+    bottom: -200px;
+    left: -100px;
+    animation: floatGlow2 15s ease-in-out infinite;
+}
+
+/* Subtle center glow */
+.circle-3 {
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(200, 200, 200, 0.04) 0%, transparent 60%);
+    top: 40%;
+    left: 15%;
+    animation: floatGlow3 18s ease-in-out infinite;
+}
+
+/* Extra ambient glow */
+.circle-4 {
+    width: 250px;
+    height: 250px;
+    background: radial-gradient(circle, rgba(150, 150, 150, 0.05) 0%, transparent 50%);
+    top: 70%;
+    right: 20%;
+    animation: floatGlow4 14s ease-in-out infinite;
+}
+
+/* Small accent blob */
+.circle-5 {
+    width: 180px;
+    height: 180px;
+    background: radial-gradient(circle, rgba(220, 220, 220, 0.03) 0%, transparent 55%);
+    top: 20%;
+    left: 25%;
+    animation: floatGlow5 20s ease-in-out infinite;
+}
+
+@keyframes floatGlow1 {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+    50% { transform: translate(-40px, 50px) scale(1.05); opacity: 0.9; }
+}
+
+@keyframes floatGlow2 {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+    50% { transform: translate(50px, -35px) scale(1.08); opacity: 0.8; }
+}
+
+@keyframes floatGlow3 {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
+    50% { transform: translate(30px, 50px) scale(1.1); opacity: 0.7; }
+}
+
+@keyframes floatGlow4 {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.4; }
+    50% { transform: translate(-25px, -40px) scale(1.05); opacity: 0.6; }
+}
+
+@keyframes floatGlow5 {
+    0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.3; }
+    50% { transform: translate(25px, 30px) scale(1.15); opacity: 0.5; }
 }
 
 /* ========================================
@@ -844,4 +921,14 @@
     .login-card { padding: 35px 25px; border-radius: 20px; }
     .login-title { font-size: 24px; }
     .role-selection { grid-template-columns: 1fr; }
+    .circle-1 { width: 350px; height: 350px; }
+    .circle-2 { width: 280px; height: 280px; }
+    .circle-3 { width: 200px; height: 200px; }
+    .circle-4 { width: 150px; height: 150px; }
+    .circle-5 { width: 120px; height: 120px; }
+}
+
+@media (max-width: 576px) {
+    .login-container { padding: 90px 12px 25px; }
+    .login-card { padding: 30px 20px; }
 }
