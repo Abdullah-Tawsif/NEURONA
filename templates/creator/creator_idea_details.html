@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Idea Details – {{ idea.title }} | Neurona</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/static/css/creator/creator_dashboard.css"/>
+  <style>
+    .idea-detail-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 30px 20px;
+    }
+
+    .detail-card {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 30px;
+      margin-bottom: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+    }
+
+    .detail-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #f8f9fa;
+    }
+
+    .detail-header h1 {
+      font-size: 24px;
+      font-weight: 700;
+      color: #1a1a1a;
+      margin-bottom: 5px;
+    }
+
+    .submission-badge {
+      background: #A68B5C;
+      color: #ffffff;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'Courier New', monospace;
+    }
+
+    .detail-section h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .detail-section h3 i {
+      color: #A68B5C;
+    }
+
+    .detail-item {
+      display: flex;
+      margin-bottom: 10px;
+    }
+
+    .detail-label {
+      font-weight: 600;
+      color: #666;
+      min-width: 160px;
+      flex-shrink: 0;
+    }
+
+    .detail-value {
+      color: #333;
+      flex: 1;
+    }
+
+    .product-images-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 10px;
+    }
+
+    .product-images-grid img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 10px;
+      border: 1px solid #e0e0e0;
+    }
+
+    .founder-item, .investor-item {
+      padding: 10px 14px;
+      background: #f8f9fa;
+      border-radius: 8px;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-submitted { background: #e8f8f0; color: #2ecc71; }
+    .status-draft { background: #fef9e7; color: #f1c40f; }
+    .status-reviewing { background: #e3f2fd; color: #2196f3; }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: #666;
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 20px;
+      transition: color 0.3s ease;
+    }
+
+    .back-link:hover {
+      color: #A68B5C;
+    }
+
+    @media (max-width: 768px) {
+      .detail-header {
+        flex-direction: column;
+        gap: 10px;
+      }
+      .detail-item {
+        flex-direction: column;
+      }
+      .detail-label {
+        min-width: auto;
+        margin-bottom: 3px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+  <div class="container d-flex justify-content-between align-items-center">
+    <div class="logo">
+      <a href="/creator_dashboard">
+        <img src="/static/images/logo_white.png" class="navbar-logo" alt="Neurona Logo">
+      </a>
+    </div>
+    <a href="/creator_dashboard" class="back-to-dashboard-btn" style="display:inline-flex;align-items:center;gap:8px;padding:8px 18px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);border-radius:8px;color:#fff;text-decoration:none;font-size:14px;font-weight:500;">
+      <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+  </div>
+</nav>
+
+<div class="idea-detail-container">
+  <a href="/creator_dashboard" class="back-link">
+    <i class="fas fa-arrow-left"></i> Back to Dashboard
+  </a>
+
+  <div class="detail-card">
+    <div class="detail-header">
+      <div>
+        <h1>{{ idea.title }}</h1>
+        <span class="status-badge status-{{ idea.status }}">{{ idea.status|capitalize }}</span>
+      </div>
+      <span class="submission-badge">{{ idea.submission_id }}</span>
+    </div>
+
+    <div class="detail-section" style="margin-bottom:25px;">
+      <h3><i class="fas fa-info-circle"></i> Basic Information</h3>
+      <div class="detail-item"><div class="detail-label">Category:</div><div class="detail-value">{{ idea.category }}{% if idea.other_category %} ({{ idea.other_category }}){% endif %}</div></div>
+      <div class="detail-item"><div class="detail-label">Current Status:</div><div class="detail-value">{{ idea.current_status }}</div></div>
+      <div class="detail-item"><div class="detail-label">Tags:</div><div class="detail-value">{{ idea.tags }}</div></div>
+      <div class="detail-item"><div class="detail-label">Target Market:</div><div class="detail-value">{{ idea.target_market }}</div></div>
+      <div class="detail-item"><div class="detail-label">Summary:</div><div class="detail-value">{{ idea.summary }}</div></div>
+      <div class="detail-item"><div class="detail-label">Problem:</div><div class="detail-value">{{ idea.problem_statement }}</div></div>
+      <div class="detail-item"><div class="detail-label">Solution:</div><div class="detail-value">{{ idea.proposed_solution }}</div></div>
+    </div>
+
+    <div class="detail-section" style="margin-bottom:25px;">
+      <h3><i class="fas fa-address-card"></i> Contact Information</h3>
+      <div class="detail-item"><div class="detail-label">Full Name:</div><div class="detail-value">{{ idea.full_name }}</div></div>
+      <div class="detail-item"><div class="detail-label">Email:</div><div class="detail-value">{{ idea.email }}</div></div>
+      <div class="detail-item"><div class="detail-label">Contact:</div><div class="detail-value">{{ idea.contact_number }}</div></div>
+      <div class="detail-item"><div class="detail-label">Founders:</div><div class="detail-value">
+        {% for f in founders %}
+        <div class="founder-item">{{ f.name }} ({{ f.role }}) - <a href="{{ f.linkedin }}" target="_blank" style="color:#0077b5;">LinkedIn</a></div>
+        {% endfor %}
+      </div></div>
+      <div class="detail-item"><div class="detail-label">Website:</div><div class="detail-value">{{ idea.company_website or 'N/A' }}</div></div>
+      <div class="detail-item"><div class="detail-label">Team Size:</div><div class="detail-value">{{ idea.team_size }}</div></div>
+      <div class="detail-item"><div class="detail-label">Address:</div><div class="detail-value">{{ idea.address }}</div></div>
+      <div class="detail-item"><div class="detail-label">Country:</div><div class="detail-value">{{ idea.country }}</div></div>
+    </div>
+
+    <div class="detail-section" style="margin-bottom:25px;">
+      <h3><i class="fas fa-money-bill-wave"></i> Funding Details</h3>
+      <div class="detail-item"><div class="detail-label">Funding Goal:</div><div class="detail-value">{{ idea.funding_goal }} {{ idea.currency }}</div></div>
+      <div class="detail-item"><div class="detail-label">Product Stage:</div><div class="detail-value">{{ idea.product_stage }}</div></div>
+      <div class="detail-item"><div class="detail-label">Equity Offered:</div><div class="detail-value">{{ idea.equity_offered }}%</div></div>
+      <div class="detail-item"><div class="detail-label">Funding Usage:</div><div class="detail-value">{{ idea.funding_usage }}</div></div>
+      <div class="detail-item"><div class="detail-label">Timeline:</div><div class="detail-value">{{ idea.expected_timeline }}</div></div>
+      <div class="detail-item"><div class="detail-label">Revenue Status:</div><div class="detail-value">{{ idea.revenue_status }}</div></div>
+      {% if idea.monthly_revenue %}
+      <div class="detail-item"><div class="detail-label">Monthly Revenue:</div><div class="detail-value">{{ idea.monthly_revenue }}</div></div>
+      {% endif %}
+      <div class="detail-item"><div class="detail-label">Existing Investors:</div><div class="detail-value">
+        {% if existing_investors and existing_investors|length > 0 %}
+        {% for inv in existing_investors %}
+        <div class="investor-item">{{ inv.name }}: {{ inv.amount }}</div>
+        {% endfor %}
+        {% else %}
+        None
+        {% endif %}
+      </div></div>
+      <div class="detail-item"><div class="detail-label">Intellectual Property:</div><div class="detail-value">{{ idea.intellectual_property or 'None' }}</div></div>
+    </div>
+
+    <div class="detail-section" style="margin-bottom:25px;">
+      <h3><i class="fas fa-images"></i> Product Images</h3>
+      <div class="product-images-grid">
+        {% for img in product_images %}
+        <img src="/{{ img }}" alt="Product Image {{ loop.index }}">
+        {% endfor %}
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <h3><i class="fas fa-file-alt"></i> Documents</h3>
+      <div class="detail-item"><div class="detail-label">Business Plan:</div><div class="detail-value">
+        {% if idea.business_plan_path %}
+        <a href="/{{ idea.business_plan_path }}" target="_blank" style="color:#A68B5C;">View Document</a>
+        {% else %}N/A{% endif %}
+      </div></div>
+      {% if ip_docs and ip_docs|length > 0 %}
+      <div class="detail-item"><div class="detail-label">IP Documents:</div><div class="detail-value">
+        {% for doc in ip_docs %}
+        <div><a href="/{{ doc }}" target="_blank" style="color:#A68B5C;">Document {{ loop.index }}</a></div>
+        {% endfor %}
+      </div></div>
+      {% endif %}
+      {% if idea.product_demo_url %}
+      <div class="detail-item"><div class="detail-label">Demo URL:</div><div class="detail-value"><a href="{{ idea.product_demo_url }}" target="_blank" style="color:#A68B5C;">View Demo</a></div></div>
+      {% endif %}
+      {% if idea.product_demo_video_path %}
+      <div class="detail-item"><div class="detail-label">Demo Video:</div><div class="detail-value"><a href="/{{ idea.product_demo_video_path }}" target="_blank" style="color:#A68B5C;">View Video</a></div></div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
