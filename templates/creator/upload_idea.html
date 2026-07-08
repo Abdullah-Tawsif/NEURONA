@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Upload Idea – Neurona</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/static/css/creator/upload_idea.css"/>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark py-3">
+  <div class="container d-flex justify-content-between align-items-center">
+    <div class="logo">
+      <a href="/creator_dashboard">
+        <img src="/static/images/logo_white.png" class="navbar-logo" alt="Neurona Logo">
+      </a>
+    </div>
+    <div class="d-flex align-items-center gap-3">
+      <a href="/creator_dashboard" class="back-to-dashboard-btn">
+        <i class="fas fa-arrow-left"></i> Back to Dashboard
+      </a>
+    </div>
+  </div>
+</nav>
+
+<!-- Error Banner -->
+{% if error %}
+<div class="container mt-3">
+  <div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <i class="fas fa-exclamation-circle me-2"></i>{{ error }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+  </div>
+</div>
+{% endif %}
+
+<!-- Main Wizard Container -->
+<div class="wizard-container">
+  <div class="wizard-header">
+    <h1>Upload Your Startup Idea</h1>
+    <p>Share your vision with potential investors. Complete all steps to submit.</p>
+  </div>
+
+  <!-- Progress Indicator -->
+  <div class="progress-indicator">
+    <div class="progress-bar-container">
+      <div class="progress-bar-track">
+        <div class="progress-bar-fill" id="progressFill" style="width: 25%;"></div>
+      </div>
+      <div class="progress-steps">
+        <div class="progress-step active" data-step="1">
+          <div class="step-circle">1</div>
+          <div class="step-label">Basic Info</div>
+        </div>
+        <div class="progress-step" data-step="2">
+          <div class="step-circle">2</div>
+          <div class="step-label">Contact</div>
+        </div>
+        <div class="progress-step" data-step="3">
+          <div class="step-circle">3</div>
+          <div class="step-label">Funding</div>
+        </div>
+        <div class="progress-step" data-step="4">
+          <div class="step-circle">4</div>
+          <div class="step-label">Review</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auto-save indicator -->
+  <div class="auto-save-indicator" id="autoSaveIndicator" style="display:none;">
+    <i class="fas fa-check-circle"></i> Draft saved automatically
+  </div>
+
+  <form method="POST" action="/upload_idea" enctype="multipart/form-data" id="uploadIdeaForm" novalidate>
+    <input type="hidden" name="is_draft" id="isDraftInput" value="false">
+    <input type="hidden" name="draft_id" id="draftIdInput" value="{{ draft_id or '' }}">
+
+    <!-- ==================== STEP 1: Basic Information ==================== -->
+    <div class="wizard-step active" data-step="1">
+      <div class="step-header">
+        <h2><i class="fas fa-info-circle"></i> Basic Information</h2>
+        <p>Tell us about your idea</p>
+      </div>
+
+      <div class="form-group">
+        <label for="title">Title <span class="required">*</span></label>
+        <input type="text" id="title" name="title" class="form-control" placeholder="Enter your idea title (max 8 words)" value="{{ form_data.title if form_data else '' }}" required>
+        <div class="field-hint" id="titleHint">Maximum 8 words</div>
+        <div class="invalid-feedback">Title must be 8 words or less</div>
+      </div>
+
+      <div class="form-group">
+        <label>Category <span class="required">*</span></label>
+        <p class="field-description">Select all that apply</p>
+        <div class="chips-container" id="categoryContainer">
+          {% for cat in categories %}
+          <div class="chip-option" data-value="{{ cat }}" onclick="toggleChip(this, 'category')">
+            {{ cat }}
+          </div>
+          {% endfor %}
+        </div>
+        <input type="hidden" name="category" id="categoryInput" value="{{ form_data.category if form_data else '' }}">
+        <div class="invalid-feedback">Please select at least one category</div>
+      </div>
+
+      <div class="form-group" id="otherCategoryGroup" style="display:none;">
+        <label for="other_category">Other Category <span class="required">*</span></label>
+        <input type="text" id="other_category" name="other_category" class="form-control" placeholder="Specify category (max 2 words)" value="{{ form_data.other_category if form_data else '' }}">
+        <div class="field-hint">Maximum 2 words</div>
+      </div>
+
+      <div class="form-group">
+        <label>Current Status <span class="required">*</span></label>
+        <p class="field-description">Select all that apply</p>
+        <div class="chips-container" id="statusContainer">
+          {% for status in current_statuses %}
+          <div class="chip-option" data-value="{{ status }}" onclick="toggleChip(this, 'current_status')">
+            {{ status }}
+          </div>
+          {% endfor %}
+        </div>
+        <input type="hidden" name="current_status" id="currentStatusInput" value="{{ form_data.current_status if form_data else '' }}">
+        <div class="invalid-feedback">Please select at least one status</div>
+      </div>
+
+      <div class="form-group">
+        <label for="tagInput">Tags / Keywords <span class="required">*</span></label>
+        <p class="field-description">Type a tag and press + to add</p>
+        <div class="tag-input-wrapper">
+          <input type="text" id="tagInput" placeholder="Type a tag..." class="form-control">
+          <button type="button" class="add-tag-btn" onclick="addTag()">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+        <div class="tags-display" id="tagsDisplay"></div>
+        <input type="hidden" name="tags" id="tagsInput" value="{{ form_data.tags if form_data else '' }}">
+        <div class="invalid-feedback">Please add at least one tag</div>
+      </div>
+
+      <div class="form-group">
+        <label>Target Market <span class="required">*</span></label>
+        <p class="field-description">Select all that apply</p>
+        <div class="chips-container" id="targetMarketContainer">
+          {% for market in target_markets %}
+          <div class="chip-option" data-value="{{ market }}" onclick="toggleChip(this, 'target_market')">
+            {{ market }}
+          </div>
+          {% endfor %}
+        </div>
+        <input type="hidden" name="target_market" id="targetMarketInput" value="{{ form_data.target_market if form_data else '' }}">
+        <div class="invalid-feedback">Please select at least one target market</div>
+      </div>
+
+      <div class="form-group">
+        <label for="summary">Summary <span class="required">*</span></label>
+        <textarea id="summary" name="summary" class="form-control" rows="4" placeholder="Provide a brief summary of your idea" required>{{ form_data.summary if form_data else '' }}</textarea>
+        <div class="char-counter"><span id="summaryCount">0</span> characters</div>
+      </div>
+
+      <div class="form-group">
+        <label for="problem_statement">Problem Statement <span class="required">*</span></label>
+        <textarea id="problem_statement" name="problem_statement" class="form-control" rows="4" placeholder="What problem does your idea solve?" required>{{ form_data.problem_statement if form_data else '' }}</textarea>
+        <div class="char-counter"><span id="problemCount">0</span> characters</div>
+      </div>
+
+      <div class="form-group">
+        <label for="proposed_solution">Proposed Solution <span class="required">*</span></label>
+        <textarea id="proposed_solution" name="proposed_solution" class="form-control" rows="4" placeholder="How does your idea solve the problem?" required>{{ form_data.proposed_solution if form_data else '' }}</textarea>
+        <div class="char-counter"><span id="solutionCount">0</span> characters</div>
+      </div>
+
+      <div class="step-navigation">
+        <button type="button" class="btn-nav btn-back" disabled>
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <button type="button" class="btn-nav btn-next" onclick="nextStep(1)">
+          Next <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== STEP 2: Information & Contact ==================== -->
+    <div class="wizard-step" data-step="2">
+      <div class="step-header">
+        <h2><i class="fas fa-address-card"></i> Information & Contact</h2>
+        <p>Your contact and team details</p>
+      </div>
+
+      <div class="form-group">
+        <label for="full_name">Full Name <span class="required">*</span></label>
+        <input type="text" id="full_name" name="full_name" class="form-control" value="{{ full_name }}" required>
+      </div>
+
+      <div class="form-group">
+        <label for="email">Email <span class="required">*</span></label>
+        <input type="email" id="email" name="email" class="form-control" value="{{ email }}" required>
+        <div class="invalid-feedback">Please enter a valid email</div>
+      </div>
+
+      <div class="form-group">
+        <label for="contact_number">Contact Number <span class="required">*</span></label>
+        <div class="phone-input-wrapper">
+          <select id="phoneCountryCode" class="form-control phone-country-select">
+            {% for pc in phone_countries %}
+            <option value="{{ pc.code }}">{{ pc.flag }} {{ pc.name }} ({{ pc.code }})</option>
+            {% endfor %}
+          </select>
+          <input type="text" id="contact_number" name="contact_number" class="form-control phone-number-input" placeholder="Enter phone number" required>
+        </div>
+        <div class="invalid-feedback">Please enter a valid phone number</div>
+      </div>
+
+      <div class="form-group">
+        <label>Founder Information <span class="required">*</span></label>
+        <p class="field-description">Add all founders of your startup</p>
+        <div id="foundersContainer">
+          <div class="founder-row">
+            <div class="founder-fields">
+              <input type="text" class="form-control founder-name" placeholder="Founder Name *">
+              <input type="text" class="form-control founder-role" placeholder="Role *">
+              <input type="url" class="form-control founder-linkedin" placeholder="LinkedIn URL *">
+              <button type="button" class="btn-remove-founder" onclick="removeFounder(this)">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-add-founder" onclick="addFounder()">
+          <i class="fas fa-plus"></i> Add Founder
+        </button>
+        <input type="hidden" name="founders" id="foundersInput" value="[]">
+        <div class="invalid-feedback">Please add at least one founder with valid LinkedIn URLs</div>
+      </div>
+
+      <div class="form-group">
+        <label for="company_website">Company Website <span class="optional">(Optional)</span></label>
+        <input type="url" id="company_website" name="company_website" class="form-control" placeholder="https://yourcompany.com" value="{{ form_data.company_website if form_data else '' }}">
+        <div class="invalid-feedback">Please enter a valid URL</div>
+      </div>
+
+      <div class="form-group">
+        <label for="team_size">Team Size <span class="required">*</span></label>
+        <input type="number" id="team_size" name="team_size" class="form-control" min="1" placeholder="Number of team members" value="{{ form_data.team_size if form_data else '' }}" required>
+        <div class="invalid-feedback">Team size must be at least 1</div>
+      </div>
+
+      <div class="form-group">
+        <label for="address">Address <span class="required">*</span></label>
+        <textarea id="address" name="address" class="form-control" rows="3" placeholder="Your full address" required>{{ form_data.address if form_data else '' }}</textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="country">Country <span class="required">*</span></label>
+        <select id="country" name="country" class="form-control" required>
+          <option value="">Select your country</option>
+          {% for country in countries %}
+          <option value="{{ country }}" {% if form_data and form_data.country == country %}selected{% endif %}>{{ country }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="step-navigation">
+        <button type="button" class="btn-nav btn-back" onclick="prevStep(2)">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <button type="button" class="btn-nav btn-next" onclick="nextStep(2)">
+          Next <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== STEP 3: Funding & Attachments ==================== -->
+    <div class="wizard-step" data-step="3">
+      <div class="step-header">
+        <h2><i class="fas fa-money-bill-wave"></i> Funding & Attachments</h2>
+        <p>Funding details and file uploads</p>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group half">
+          <label for="funding_goal">Funding Goal <span class="required">*</span></label>
+          <input type="number" id="funding_goal" name="funding_goal" class="form-control" min="50" step="any" placeholder="Minimum 50" value="{{ form_data.funding_goal if form_data else '' }}" required>
+          <div class="field-hint">Minimum value: 50</div>
+          <div class="invalid-feedback">Funding goal must be at least 50</div>
+        </div>
+
+        <div class="form-group half">
+          <label for="currency">Currency <span class="required">*</span></label>
+          <select id="currency" name="currency" class="form-control" required>
+            {% for curr in currencies %}
+            <option value="{{ curr }}" {% if form_data and form_data.currency == curr %}selected{% endif %}>{{ curr }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Product Stage <span class="required">*</span></label>
+        <div class="stage-cards" id="productStageContainer">
+          {% for stage in product_stages %}
+          <div class="stage-card" data-value="{{ stage }}" onclick="selectStage(this)">
+            <i class="fas fa-circle stage-icon"></i>
+            <span>{{ stage }}</span>
+          </div>
+          {% endfor %}
+        </div>
+        <input type="hidden" name="product_stage" id="productStageInput" value="{{ form_data.product_stage if form_data else '' }}">
+        <div class="invalid-feedback">Please select a product stage</div>
+      </div>
+
+      <div class="form-group">
+        <label for="equity_offered">Equity Offered (%) <span class="required">*</span></label>
+        <input type="number" id="equity_offered" name="equity_offered" class="form-control" min="0" max="100" step="0.01" placeholder="e.g., 10.5" value="{{ form_data.equity_offered if form_data else '' }}" required>
+        <div class="field-hint">Decimals allowed (0-100)</div>
+        <div class="invalid-feedback">Equity must be between 0 and 100</div>
+      </div>
+
+      <div class="form-group">
+        <label for="funding_usage">Funding Usage <span class="required">*</span></label>
+        <textarea id="funding_usage" name="funding_usage" class="form-control" rows="4" placeholder="How will you use the funding?" required>{{ form_data.funding_usage if form_data else '' }}</textarea>
+        <div class="char-counter"><span id="fundingUsageCount">0</span> characters</div>
+      </div>
+
+      <div class="form-group">
+        <label>Expected Timeline <span class="required">*</span></label>
+        <div class="timeline-options" id="timelineContainer">
+          {% for timeline in timelines %}
+          <div class="timeline-option" data-value="{{ timeline }}" onclick="selectTimeline(this)">
+            <i class="far fa-circle"></i> {{ timeline }}
+          </div>
+          {% endfor %}
+        </div>
+        <input type="hidden" name="expected_timeline" id="timelineInput" value="{{ form_data.expected_timeline if form_data else '' }}">
+        <div class="invalid-feedback">Please select a timeline</div>
+      </div>
+
+      <div class="form-group">
+        <label>Revenue Status <span class="required">*</span></label>
+        <div class="revenue-options" id="revenueContainer">
+          {% for rev in revenue_statuses %}
+          <div class="revenue-option" data-value="{{ rev }}" onclick="selectRevenue(this)">
+            <i class="far fa-circle"></i> {{ rev }}
+          </div>
+          {% endfor %}
+        </div>
+        <input type="hidden" name="revenue_status" id="revenueInput" value="{{ form_data.revenue_status if form_data else '' }}">
+        <div class="invalid-feedback">Please select a revenue status</div>
+      </div>
+
+      <div class="form-group" id="monthlyRevenueGroup" style="display:none;">
+        <label for="monthly_revenue">Monthly Revenue <span class="optional">(Optional)</span></label>
+        <input type="number" id="monthly_revenue" name="monthly_revenue" class="form-control" min="0" step="any" placeholder="Monthly revenue amount" value="{{ form_data.monthly_revenue if form_data else '' }}">
+      </div>
+
+      <div class="form-group">
+        <label>Existing Investors? <span class="required">*</span></label>
+        <div class="investor-toggle">
+          <div class="investor-option active" data-value="no" onclick="selectInvestorOption(this)">
+            <i class="far fa-circle"></i> No
+          </div>
+          <div class="investor-option" data-value="yes" onclick="selectInvestorOption(this)">
+            <i class="far fa-circle"></i> Yes
+          </div>
+        </div>
+        <input type="hidden" name="existing_investors" id="existingInvestorsInput" value="[]">
+
+        <div id="investorsContainer" style="display:none; margin-top:15px;">
+          <div class="investor-row">
+            <div class="investor-fields">
+              <input type="text" class="form-control investor-name" placeholder="Investor Name *">
+              <input type="number" class="form-control investor-amount" placeholder="Amount Invested *" min="0" step="any">
+              <button type="button" class="btn-remove-investor" onclick="removeInvestor(this)">
+                <i class="fas fa-times"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-add-investor" id="addInvestorBtn" style="display:none;" onclick="addInvestor()">
+          <i class="fas fa-plus"></i> Add Investor
+        </button>
+      </div>
+
+      <div class="form-group">
+        <label for="business_plan">Business Plan <span class="required">*</span></label>
+        <p class="field-description">Supported: PDF, DOC, DOCX, PPT, PPTX, XLS, XLSX, Images | Max: 10MB</p>
+        <div class="file-upload-area" id="businessPlanArea" onclick="document.getElementById('business_plan').click()">
+          <i class="fas fa-cloud-upload-alt"></i>
+          <p>Click to upload or drag and drop</p>
+          <span class="file-name" id="businessPlanName"></span>
+        </div>
+        <input type="file" id="business_plan" name="business_plan" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.jpg,.jpeg,.png" style="display:none;">
+        <div class="invalid-feedback">Business plan is required</div>
+      </div>
+
+      <div class="form-group">
+        <label for="product_images">Product Images <span class="required">*</span></label>
+        <p class="field-description">Supported: JPG, JPEG, PNG, WEBP | Max: 5MB each | Multiple allowed</p>
+        <div class="file-upload-area" id="productImagesArea" onclick="document.getElementById('product_images').click()">
+          <i class="fas fa-images"></i>
+          <p>Click to upload or drag and drop</p>
+        </div>
+        <input type="file" id="product_images" name="product_images" accept=".jpg,.jpeg,.png,.webp" multiple style="display:none;">
+        <div class="image-previews" id="imagePreviews"></div>
+        <div class="invalid-feedback">At least one product image is required</div>
+      </div>
+
+      <div class="form-group">
+        <label>Intellectual Property</label>
+        <div class="ip-checkboxes" id="ipContainer">
+          <label class="ip-checkbox">
+            <input type="checkbox" value="Patent Filed" onchange="toggleIP(this)"> Patent Filed
+          </label>
+          <label class="ip-checkbox">
+            <input type="checkbox" value="Patent Granted" onchange="toggleIP(this)"> Patent Granted
+          </label>
+          <label class="ip-checkbox">
+            <input type="checkbox" value="Trademark" onchange="toggleIP(this)"> Trademark
+          </label>
+          <label class="ip-checkbox">
+            <input type="checkbox" value="Copyright" onchange="toggleIP(this)"> Copyright
+          </label>
+          <label class="ip-checkbox">
+            <input type="checkbox" value="None" onchange="toggleIPNone(this)"> None
+          </label>
+        </div>
+        <input type="hidden" name="intellectual_property" id="ipInput" value="">
+      </div>
+
+      <div class="form-group" id="ipUploadGroup" style="display:none;">
+        <label>Upload Intellectual Property Documents</label>
+        <p class="field-description">Supported: PDF, Images, Documents | Max: 10MB each</p>
+        <div class="file-upload-area" id="ipDocsArea" onclick="document.getElementById('ip_documents').click()">
+          <i class="fas fa-file-upload"></i>
+          <p>Click to upload IP documents</p>
+        </div>
+        <input type="file" id="ip_documents" name="ip_documents" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" multiple style="display:none;">
+        <div class="ip-doc-list" id="ipDocList"></div>
+        <button type="button" class="btn-add-doc" onclick="document.getElementById('ip_documents').click()">
+          <i class="fas fa-plus"></i> Add Another Document
+        </button>
+      </div>
+
+      <div class="form-group">
+        <label for="product_demo_url">Product Demo <span class="optional">(Optional)</span></label>
+        <p class="field-description">YouTube URL, Vimeo URL, or Google Drive Link</p>
+        <input type="url" id="product_demo_url" name="product_demo_url" class="form-control" placeholder="https://youtube.com/watch?v=..." value="{{ form_data.product_demo_url if form_data else '' }}">
+        <div class="field-hint">OR upload a video below</div>
+      </div>
+
+      <div class="form-group">
+        <label for="demo_video">Upload Demo Video <span class="optional">(Optional)</span></label>
+        <p class="field-description">Supported: MP4, MOV, AVI, WEBM | Max: 50MB</p>
+        <div class="file-upload-area" id="demoVideoArea" onclick="document.getElementById('demo_video').click()">
+          <i class="fas fa-video"></i>
+          <p>Click to upload a demo video</p>
+          <span class="file-name" id="demoVideoName"></span>
+        </div>
+        <input type="file" id="demo_video" name="demo_video" accept=".mp4,.mov,.avi,.webm,.mkv" style="display:none;">
+      </div>
+
+      <div class="step-navigation">
+        <button type="button" class="btn-nav btn-back" onclick="prevStep(3)">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <button type="button" class="btn-nav btn-next" onclick="nextStep(3)">
+          Next <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- ==================== STEP 4: Review ==================== -->
+    <div class="wizard-step" data-step="4">
+      <div class="step-header">
+        <h2><i class="fas fa-clipboard-check"></i> Review & Submit</h2>
+        <p>Please review all information before submitting</p>
+      </div>
+
+      <div class="review-container" id="reviewContainer">
+        <!-- Review content will be populated by JS -->
+      </div>
+
+      <div class="terms-section">
+        <label class="terms-checkbox">
+          <input type="checkbox" id="termsAgree" onchange="updateSubmitButton()">
+          <span class="checkmark"></span>
+          <span>I agree to the <a href="/terms_of_service" target="_blank">Terms & Policies</a></span>
+        </label>
+      </div>
+
+      <div class="step-navigation">
+        <button type="button" class="btn-nav btn-back" onclick="prevStep(4)">
+          <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <button type="button" class="btn-nav btn-save-draft" onclick="saveDraft()">
+          <i class="fas fa-save"></i> Save as Draft
+        </button>
+        <button type="submit" class="btn-nav btn-submit" id="submitBtn" disabled>
+          <span class="btn-text">Submit Idea</span>
+          <span class="btn-spinner" style="display:none;">
+            <i class="fas fa-spinner fa-spin"></i> Submitting...
+          </span>
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="/static/js/creator/upload_idea.js"></script>
+</body>
+</html>
