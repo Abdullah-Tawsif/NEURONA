@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 from models.user import User
 from models.creator_verification import CreatorVerification
+from models.idea import Idea
 
 
 def get_creator_dashboard_data(db: Session, user: dict) -> dict:
@@ -22,10 +23,31 @@ def get_creator_dashboard_data(db: Session, user: dict) -> dict:
             verified = 0
         show_verified_popup = False
 
+    ideas = (
+        db.query(Idea)
+        .filter(Idea.user_id == user.get("id"), Idea.is_draft == "false")
+        .order_by(Idea.created_at.desc())
+        .all()
+    )
+
+    creator_ideas = []
+    for idea in ideas:
+        creator_ideas.append({
+            "id": idea.id,
+            "title": idea.title,
+            "summary": idea.summary,
+            "category": idea.category,
+            "funding_needed": idea.funding_goal,
+            "equity_offered": idea.equity_offered,
+            "funded_amount": 0,
+            "funding_progress": 0,
+            "product_image": None,
+        })
+
     return {
         "creator_name": creator_name,
         "verified": verified,
-        "creator_ideas": [],
+        "creator_ideas": creator_ideas,
         "show_verified_popup": show_verified_popup,
     }
 
