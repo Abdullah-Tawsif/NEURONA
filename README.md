@@ -135,6 +135,7 @@ Neurona/
 │
 ├── models/
 │   ├── user.py
+│   ├── idea.py
 │   ├── creator_verification.py
 │   └── investor_verification.py
 │
