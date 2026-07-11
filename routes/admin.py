@@ -11,6 +11,7 @@ from models.investor_verification import InvestorVerification
 from models.creator_verification import CreatorVerification
 from models.user import User
 from models.idea import Idea
+from models.idea_extra import IdeaDeleteRequest, IdeaAdminNote
 
 router = APIRouter()
 templates = Jinja2Templates(directory="templates")
@@ -18,59 +19,36 @@ templates = Jinja2Templates(directory="templates")
 
 # ---------------- ADMIN DASHBOARD ----------------
 @router.get("/admin", response_class=HTMLResponse)
-async def admin_dashboard(
-    request: Request,
-    db: Session = Depends(get_db),
-):
+async def admin_dashboard(request: Request, db: Session = Depends(get_db)):
     user = request.session.get("user")
-
     if not user or user.get("role") != "admin":
         return RedirectResponse(url="/login", status_code=303)
-
     stats = get_admin_stats(db)
-
     return templates.TemplateResponse(
         request=request,
         name="admin/admin_dashboard.html",
-        context={
-            "username": user.get("username", "Admin"),
-            **stats,
-        },
+        context={"username": user.get("username", "Admin"), **stats},
     )
 
-# ---------------- INVESTOR VERIFICATION PAGE ----------------
-@router.get("/admin/admin_verify_investor", response_class=HTMLResponse)
-def investor_verifications(
-    request: Request,
-    db: Session = Depends(get_db),
-):
-    user = request.session.get("user")
 
+# ---------------- INVESTOR VERIFICATION ----------------
+@router.get("/admin/admin_verify_investor", response_class=HTMLResponse)
+def investor_verifications(request: Request, db: Session = Depends(get_db)):
+    user = request.session.get("user")
     if not user or user.get("role") != "admin":
         return RedirectResponse(url="/login", status_code=303)
-
     stats = get_admin_stats(db)
     verifications = db.query(InvestorVerification).all()
-
     return templates.TemplateResponse(
         request=request,
         name="admin/admin_verify_investor.html",
-        context={
-            "username": user.get("username", "Admin"),
-            "verifications": verifications,
-            **stats,
-        },
+        context={"username": user.get("username", "Admin"), "verifications": verifications, **stats},
     )
 
 
-# ---------------- APPROVE INVESTOR ----------------
 @router.post("/admin/investor/approve/{vid}")
-def approve_investor(
-    vid: int,
-    db: Session = Depends(get_db),
-):
+def approve_investor(vid: int, db: Session = Depends(get_db)):
     v = db.query(InvestorVerification).filter_by(id=vid).first()
-
     if v:
         v.status = "approved"
         user = db.query(User).filter(User.id == v.user_id).first()
@@ -78,21 +56,12 @@ def approve_investor(
             user.is_verified = True
             user.verified_popup_shown = False
         db.commit()
-
-    return RedirectResponse(
-        url="/admin/admin_verify_investor",
-        status_code=303
-    )
+    return RedirectResponse(url="/admin/admin_verify_investor", status_code=303)
 
 
-# ---------------- REJECT INVESTOR ----------------
 @router.post("/admin/investor/reject/{vid}")
-def reject_investor(
-    vid: int,
-    db: Session = Depends(get_db),
-):
+def reject_investor(vid: int, db: Session = Depends(get_db)):
     v = db.query(InvestorVerification).filter_by(id=vid).first()
-
     if v:
         v.status = "rejected"
         user = db.query(User).filter(User.id == v.user_id).first()
@@ -100,46 +69,27 @@ def reject_investor(
             user.is_verified = False
             user.verified_popup_shown = False
         db.commit()
-
-    return RedirectResponse(
-        url="/admin/admin_verify_investor",
-        status_code=303
-    )
+    return RedirectResponse(url="/admin/admin_verify_investor", status_code=303)
 
 
-# ---------------- CREATOR VERIFICATION PAGE ----------------
+# ---------------- CREATOR VERIFICATION ----------------
 @router.get("/admin/admin_verify_creator", response_class=HTMLResponse)
-def creator_verifications(
-    request: Request,
-    db: Session = Depends(get_db),
-):
+def creator_verifications(request: Request, db: Session = Depends(get_db)):
     user = request.session.get("user")
-
     if not user or user.get("role") != "admin":
         return RedirectResponse(url="/login", status_code=303)
-
     stats = get_admin_stats(db)
     verifications = db.query(CreatorVerification).all()
-
     return templates.TemplateResponse(
         request=request,
         name="admin/admin_verify_creator.html",
-        context={
-            "username": user.get("username", "Admin"),
-            "verifications": verifications,
-            **stats,
-        },
+        context={"username": user.get("username", "Admin"), "verifications": verifications, **stats},
     )
 
 
-# ---------------- APPROVE CREATOR ----------------
 @router.post("/admin/creator/approve/{vid}")
-def approve_creator(
-    vid: int,
-    db: Session = Depends(get_db),
-):
+def approve_creator(vid: int, db: Session = Depends(get_db)):
     v = db.query(CreatorVerification).filter_by(id=vid).first()
-
     if v:
         v.status = "approved"
         user = db.query(User).filter(User.id == v.user_id).first()
@@ -147,21 +97,12 @@ def approve_creator(
             user.is_verified = True
             user.verified_popup_shown = False
         db.commit()
-
-    return RedirectResponse(
-        url="/admin/admin_verify_creator",
-        status_code=303
-    )
+    return RedirectResponse(url="/admin/admin_verify_creator", status_code=303)
 
 
-# ---------------- REJECT CREATOR ----------------
 @router.post("/admin/creator/reject/{vid}")
-def reject_creator(
-    vid: int,
-    db: Session = Depends(get_db),
-):
+def reject_creator(vid: int, db: Session = Depends(get_db)):
     v = db.query(CreatorVerification).filter_by(id=vid).first()
-
     if v:
         v.status = "rejected"
         user = db.query(User).filter(User.id == v.user_id).first()
@@ -169,28 +110,18 @@ def reject_creator(
             user.is_verified = False
             user.verified_popup_shown = False
         db.commit()
-
-    return RedirectResponse(
-        url="/admin/admin_verify_creator",
-        status_code=303
-    )
+    return RedirectResponse(url="/admin/admin_verify_creator", status_code=303)
 
 
 # ---------------- ADMIN IDEAS PAGE ----------------
 @router.get("/admin_ideas", response_class=HTMLResponse)
-def admin_ideas(
-    request: Request,
-    db: Session = Depends(get_db),
-):
+def admin_ideas(request: Request, db: Session = Depends(get_db)):
     user = request.session.get("user")
-
     if not user or user.get("role") != "admin":
         return RedirectResponse(url="/login", status_code=303)
-
     stats = get_admin_stats(db)
     ideas = get_all_ideas(db)
 
-    import json as _json
     idea_list = []
     for idea in ideas:
         creator = db.query(User).filter(User.id == idea.user_id).first()
@@ -211,12 +142,16 @@ def admin_ideas(
         })
     idea_list = [i for i in idea_list if i["is_draft"] != "true"]
 
+    # Pending delete requests count
+    pending_deletes = db.query(IdeaDeleteRequest).filter(IdeaDeleteRequest.status == "pending").count()
+
     return templates.TemplateResponse(
         request=request,
         name="admin/admin_ideas.html",
         context={
             "username": user.get("username", "Admin"),
             "ideas": idea_list,
+            "pending_deletes": pending_deletes,
             **stats,
         },
     )
@@ -224,19 +159,13 @@ def admin_ideas(
 
 # ---------------- ADMIN IDEA DETAILS ----------------
 @router.get("/admin_idea_details/{idea_id}", response_class=HTMLResponse)
-def admin_idea_details(
-    request: Request,
-    idea_id: int,
-    db: Session = Depends(get_db),
-):
+def admin_idea_details(request: Request, idea_id: int, db: Session = Depends(get_db)):
     user = request.session.get("user")
-
     if not user or user.get("role") != "admin":
         return RedirectResponse(url="/login", status_code=303)
 
     stats = get_admin_stats(db)
     idea = db.query(Idea).filter(Idea.id == idea_id).first()
-
     if not idea:
         return RedirectResponse(url="/admin_ideas", status_code=303)
 
@@ -254,8 +183,15 @@ def admin_idea_details(
     founders = safe_json_parse(idea.founders)
     existing_investors = safe_json_parse(idea.existing_investors)
     ip_docs = safe_json_parse(idea.ip_document_paths)
-
     creator = db.query(User).filter(User.id == idea.user_id).first()
+
+    # Admin notes for this idea
+    admin_notes = (
+        db.query(IdeaAdminNote)
+        .filter(IdeaAdminNote.idea_id == idea_id)
+        .order_by(IdeaAdminNote.created_at.desc())
+        .all()
+    )
 
     return templates.TemplateResponse(
         request=request,
@@ -268,6 +204,7 @@ def admin_idea_details(
             "existing_investors": existing_investors,
             "ip_docs": ip_docs,
             "creator": creator,
+            "admin_notes": admin_notes,
             **stats,
         },
     )
@@ -275,18 +212,14 @@ def admin_idea_details(
 
 # ---------------- ADMIN IDEA STATUS UPDATE ----------------
 @router.post("/admin_idea_status/{idea_id}")
-async def admin_idea_status(
-    request: Request,
-    idea_id: int,
-    db: Session = Depends(get_db),
-):
+async def admin_idea_status(request: Request, idea_id: int, db: Session = Depends(get_db)):
     user = request.session.get("user")
     if not user or user.get("role") != "admin":
         return RedirectResponse(url="/login", status_code=303)
 
     form = await request.form()
     new_status = form.get("status", "").strip()
-    admin_notes = form.get("admin_notes", "").strip()
+    admin_notes_text = form.get("admin_notes", "").strip()
 
     if new_status not in ("approved", "rejected", "changes_requested", "reviewing"):
         return RedirectResponse(url=f"/admin_idea_details/{idea_id}", status_code=303)
@@ -297,6 +230,103 @@ async def admin_idea_status(
 
     idea.status = new_status
     idea.updated_at = datetime.now(timezone.utc)
-    db.commit()
 
+    if admin_notes_text:
+        note_type = "rejection_reason" if new_status == "rejected" else (
+            "changes_requested" if new_status == "changes_requested" else "approval_note"
+        )
+        note = IdeaAdminNote(
+            idea_id=idea_id,
+            note=admin_notes_text,
+            note_type=note_type,
+        )
+        db.add(note)
+
+    db.commit()
     return RedirectResponse(url=f"/admin_idea_details/{idea_id}", status_code=303)
+
+
+# ---------------- ADMIN DELETE REQUESTS ----------------
+@router.get("/admin_delete_requests", response_class=HTMLResponse)
+def admin_delete_requests(request: Request, db: Session = Depends(get_db)):
+    user = request.session.get("user")
+    if not user or user.get("role") != "admin":
+        return RedirectResponse(url="/login", status_code=303)
+
+    stats = get_admin_stats(db)
+    delete_requests = (
+        db.query(IdeaDeleteRequest)
+        .order_by(IdeaDeleteRequest.created_at.desc())
+        .all()
+    )
+
+    requests_data = []
+    for req in delete_requests:
+        idea = db.query(Idea).filter(Idea.id == req.idea_id).first()
+        creator = db.query(User).filter(User.id == req.creator_user_id).first()
+        requests_data.append({
+            "id": req.id,
+            "idea_id": req.idea_id,
+            "idea_title": idea.title if idea else "Deleted",
+            "creator_name": creator.username if creator else "Unknown",
+            "creator_email": creator.email if creator else "",
+            "reason": req.reason,
+            "status": req.status,
+            "admin_notes": req.admin_notes,
+            "created_at": req.created_at,
+            "reviewed_at": req.reviewed_at,
+        })
+
+    return templates.TemplateResponse(
+        request=request,
+        name="admin/admin_delete_requests.html",
+        context={
+            "username": user.get("username", "Admin"),
+            "delete_requests": requests_data,
+            **stats,
+        },
+    )
+
+
+@router.post("/admin_delete_requests/approve/{req_id}")
+async def approve_delete_request(request: Request, req_id: int, db: Session = Depends(get_db)):
+    user = request.session.get("user")
+    if not user or user.get("role") != "admin":
+        return RedirectResponse(url="/login", status_code=303)
+
+    form = await request.form()
+    admin_notes = form.get("admin_notes", "").strip()
+
+    req = db.query(IdeaDeleteRequest).filter(IdeaDeleteRequest.id == req_id).first()
+    if req and req.status == "pending":
+        req.status = "approved"
+        req.admin_notes = admin_notes
+        req.reviewed_at = datetime.now(timezone.utc)
+
+        idea = db.query(Idea).filter(Idea.id == req.idea_id).first()
+        if idea:
+            idea.status = "deleted"
+            idea.is_draft = "true"
+
+        db.commit()
+
+    return RedirectResponse(url="/admin_delete_requests", status_code=303)
+
+
+@router.post("/admin_delete_requests/reject/{req_id}")
+async def reject_delete_request(request: Request, req_id: int, db: Session = Depends(get_db)):
+    user = request.session.get("user")
+    if not user or user.get("role") != "admin":
+        return RedirectResponse(url="/login", status_code=303)
+
+    form = await request.form()
+    admin_notes = form.get("admin_notes", "").strip()
+
+    req = db.query(IdeaDeleteRequest).filter(IdeaDeleteRequest.id == req_id).first()
+    if req and req.status == "pending":
+        req.status = "rejected"
+        req.admin_notes = admin_notes
+        req.reviewed_at = datetime.now(timezone.utc)
+        db.commit()
+
+    return RedirectResponse(url="/admin_delete_requests", status_code=303)
