@@ -6,6 +6,11 @@ from sqlalchemy.orm import Session
 
 from models.user import User
 from models.investor_verification import InvestorVerification
+from services.investment_service import (
+    get_investor_stats,
+    get_total_available_ideas,
+    get_approved_ideas_for_investor,
+)
 
 MANDATORY_FOLDER = "static/uploads/investor_verification/mandatory"
 OPTIONAL_FOLDER = "static/uploads/investor_verification/optional"
@@ -15,7 +20,6 @@ os.makedirs(OPTIONAL_FOLDER, exist_ok=True)
 
 
 def get_investor_dashboard_data(db: Session, user: dict) -> dict:
-    """Gather dashboard context for an investor."""
     investor = db.query(User).filter(User.id == user.get("id")).first()
 
     if investor and investor.is_verified:
@@ -32,11 +36,19 @@ def get_investor_dashboard_data(db: Session, user: dict) -> dict:
             verified = 0
         show_verified_popup = False
 
+    user_id = user.get("id")
+    inv_stats = get_investor_stats(db, user_id)
+    total_available = get_total_available_ideas(db)
+    ideas = get_approved_ideas_for_investor(db, user_id)
+
     return {
         "username": user.get("username"),
         "verified": verified,
-        "ideas": [],
         "show_verified_popup": show_verified_popup,
+        "total_available_ideas": total_available,
+        "total_invested": inv_stats["total_invested"],
+        "active_investments": inv_stats["active_investments"],
+        "ideas": ideas,
     }
 
 
@@ -55,12 +67,11 @@ def save_file(upload_file, folder):
 
 
 def has_existing_verification(db, user_id):
-    existing = (
+    return (
         db.query(InvestorVerification)
         .filter(InvestorVerification.user_id == user_id)
         .first()
     )
-    return existing
 
 
 def create_investor_verification(
