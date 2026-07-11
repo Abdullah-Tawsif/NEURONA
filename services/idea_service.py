@@ -689,4 +689,13 @@ def get_admin_stats(db: Session) -> dict:
         "creator_percent": creator_percent,
         "investor_percent": investor_percent,
         "verified_percent": verified_percent,
+        "pending_deletes": _get_pending_deletes(db),
     }
+
+
+def _get_pending_deletes(db) -> int:
+    try:
+        from models.idea_extra import IdeaDeleteRequest
+        return db.query(IdeaDeleteRequest).filter(IdeaDeleteRequest.status == "pending").count()
+    except Exception:
+        return 0
