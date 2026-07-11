@@ -9,7 +9,12 @@ from database.database import get_db
 from models.creator_verification import CreatorVerification
 from models.idea import Idea
 from models.user import User
-from services.creator_service import get_creator_dashboard_data, create_creator_verification
+from services.creator_service import (
+    get_creator_dashboard_data,
+    create_creator_verification,
+    get_creator_ideas_by_status,
+    create_delete_request,
+)
 from services.idea_service import (
     get_upload_idea_context,
     create_idea,
@@ -43,6 +48,43 @@ async def creator_dashboard(
         context=context,
     )
 
+
+@router.get("/creator_ideas", response_class=HTMLResponse)
+async def creator_ideas_page(request: Request, db: Session = Depends(get_db)):
+    user = request.session.get("user")
+    if not user or user.get("role") != "creator":
+        return RedirectResponse(url="/login", status_code=303)
+
+    ideas_by_status = get_creator_ideas_by_status(db, user["id"])
+    return templates.TemplateResponse(
+        request=request,
+        name="creator/creator_ideas.html",
+        context={
+            "accepted": ideas_by_status["accepted"],
+            "under_review": ideas_by_status["under_review"],
+            "rejected": ideas_by_status["rejected"],
+            "user": user,
+        },
+    )
+
+
+@router.post("/creator_ideas/delete_request/{idea_id}")
+async def submit_delete_request(
+    request: Request,
+    idea_id: int,
+    reason: str = Form(""),
+    db: Session = Depends(get_db),
+):
+    user = request.session.get("user")
+    if not user or user.get("role") != "creator":
+        return RedirectResponse(url="/login", status_code=303)
+
+    _, error = create_delete_request(db, idea_id, user["id"], reason)
+    if error:
+        return JSONResponse({"success": False, "error": error}, status_code=400)
+    return JSONResponse({"success": True})
+
+
 # verify_creator
 @router.get("/verify_creator", response_class=HTMLResponse)
 async def verify_creator_page(request: Request, db: Session = Depends(get_db)):
@@ -64,9 +106,7 @@ async def verify_creator_page(request: Request, db: Session = Depends(get_db)):
     return templates.TemplateResponse(
         request=request,
         name="creator/verify_creator.html",
-        context={
-            "email": user.get("email"),
-        },
+        context={"email": user.get("email")},
     )
 
 
@@ -80,14 +120,9 @@ async def verify_creator(
     present_address: str = Form(...),
     db: Session = Depends(get_db),
 ):
-
     user = request.session.get("user")
-
     if not user:
-        return RedirectResponse(
-            url="/login",
-            status_code=303,
-        )
+        return RedirectResponse(url="/login", status_code=303)
 
     verification = create_creator_verification(
         db=db,
@@ -100,49 +135,27 @@ async def verify_creator(
     )
 
     if verification is None:
-        return RedirectResponse(
-            url="/creator_dashboard?already_submitted=1",
-            status_code=303,
-        )
+        return RedirectResponse(url="/creator_dashboard?already_submitted=1", status_code=303)
 
-    return RedirectResponse(
-        url="/creator_dashboard?submitted=1",
-        status_code=303,
-    )
+    return RedirectResponse(url="/creator_dashboard?submitted=1", status_code=303)
 
-# Creator Profile
+
 @router.get("/creator_profile", response_class=HTMLResponse)
 async def creator_profile(request: Request, db: Session = Depends(get_db)):
-
     user = request.session.get("user")
-
     if not user:
         return RedirectResponse("/login", status_code=303)
 
-    # Initialize stats based on the logged-in user's actual role
-    if user.get("role") == "creator":
-        stats = {
-            "total_ideas": 0,
-            "total_investments": 0,
-            "total_funding": 0
-        }
-
+    stats = {"total_ideas": 0, "total_investments": 0, "total_funding": 0}
     return templates.TemplateResponse(
         request=request,
         name="creator/creator_profile.html",
-        context={
-            "user": user,
-            "stats": stats
-        }
+        context={"user": user, "stats": stats},
     )
 
 
-# Dismiss verified popup
 @router.post("/dismiss_verified_popup")
-async def dismiss_verified_popup(
-    request: Request,
-    db: Session = Depends(get_db),
-):
+async def dismiss_verified_popup(request: Request, db: Session = Depends(get_db)):
     user = request.session.get("user")
     if not user:
         return JSONResponse({"success": False}, status_code=401)
@@ -165,13 +178,9 @@ async def upload_idea_page(request: Request, db: Session = Depends(get_db)):
 
     creator = db.query(User).filter(User.id == user["id"]).first()
     if not creator or not creator.is_verified:
-        return RedirectResponse(
-            url="/creator_dashboard?verify_required=1",
-            status_code=303,
-        )
+        return RedirectResponse(url="/creator_dashboard?verify_required=1", status_code=303)
 
     context = get_upload_idea_context(db, user)
-
     draft = get_draft(db, user["id"])
     if draft:
         context["draft"] = draft
@@ -229,40 +238,21 @@ async def upload_idea_submit(
 
     creator = db.query(User).filter(User.id == user["id"]).first()
     if not creator or not creator.is_verified:
-        return RedirectResponse(
-            url="/creator_dashboard?verify_required=1",
-            status_code=303,
-        )
+        return RedirectResponse(url="/creator_dashboard?verify_required=1", status_code=303)
 
     form_data = {
-        "title": title,
-        "category": category,
-        "other_category": other_category,
-        "current_status": current_status,
-        "tags": tags,
-        "target_market": target_market,
-        "summary": summary,
-        "problem_statement": problem_statement,
-        "proposed_solution": proposed_solution,
-        "full_name": full_name,
-        "email": email,
-        "contact_number": contact_number,
-        "founders": founders,
-        "company_website": company_website,
-        "team_size": team_size,
-        "address": address,
-        "country": country,
-        "funding_goal": funding_goal,
-        "currency": currency,
-        "product_stage": product_stage,
-        "equity_offered": equity_offered,
-        "funding_usage": funding_usage,
-        "expected_timeline": expected_timeline,
-        "revenue_status": revenue_status,
-        "monthly_revenue": monthly_revenue,
-        "existing_investors": existing_investors,
-        "intellectual_property": intellectual_property,
-        "product_demo_url": product_demo_url,
+        "title": title, "category": category, "other_category": other_category,
+        "current_status": current_status, "tags": tags, "target_market": target_market,
+        "summary": summary, "problem_statement": problem_statement,
+        "proposed_solution": proposed_solution, "full_name": full_name,
+        "email": email, "contact_number": contact_number, "founders": founders,
+        "company_website": company_website, "team_size": team_size,
+        "address": address, "country": country, "funding_goal": funding_goal,
+        "currency": currency, "product_stage": product_stage,
+        "equity_offered": equity_offered, "funding_usage": funding_usage,
+        "expected_timeline": expected_timeline, "revenue_status": revenue_status,
+        "monthly_revenue": monthly_revenue, "existing_investors": existing_investors,
+        "intellectual_property": intellectual_property, "product_demo_url": product_demo_url,
     }
 
     draft_mode = is_draft == "true"
@@ -302,10 +292,7 @@ async def upload_idea_submit(
             context=context,
         )
 
-    return RedirectResponse(
-        url=f"/upload_idea/success/{idea.submission_id}",
-        status_code=303,
-    )
+    return RedirectResponse(url=f"/upload_idea/success/{idea.submission_id}", status_code=303)
 
 
 @router.get("/upload_idea/success/{submission_id}", response_class=HTMLResponse)
