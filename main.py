@@ -9,7 +9,10 @@ from database.database import engine
 from middleware.auth_middleware import RequestLoggingMiddleware
 from middleware.error_handlers import register_error_handlers
 from models.user import Base
-import models.idea  # noqa: F401 — ensure Idea table is registered with Base
+import models.idea  # noqa: F401
+import models.investment  # noqa: F401
+import models.bookmark  # noqa: F401
+import models.idea_extra  # noqa: F401
 from routes.admin import router as admin_router
 from routes.auth import router as auth_router
 from routes.creator import router as creator_router
