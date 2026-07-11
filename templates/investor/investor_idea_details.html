@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{{ idea.title }} – Neurona</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <link rel="stylesheet" href="/static/css/investor/idea_details.css"/>
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark py-3">
+  <div class="container d-flex justify-content-between align-items-center">
+    <a href="/investor_dashboard">
+      <img src="/static/images/logo_white.png" class="navbar-logo" alt="Neurona Logo">
+    </a>
+    <a href="/investor_dashboard" class="back-btn">
+      <i class="fas fa-arrow-left"></i> Back to Dashboard
+    </a>
+  </div>
+</nav>
+
+<div class="idea-details-container">
+
+  <!-- Hero -->
+  <div class="idea-hero">
+    {% if product_images %}
+    <div class="idea-images-gallery">
+      <div class="gallery-main">
+        <img src="/{{ product_images[0] }}" alt="{{ idea.title }}" id="mainImg">
+      </div>
+      {% if product_images|length > 1 %}
+      <div class="gallery-thumbs">
+        {% for img in product_images %}
+        <img src="/{{ img }}" alt="Image {{ loop.index }}" class="thumb {% if loop.first %}active{% endif %}" onclick="setMain(this)">
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+    {% endif %}
+
+    <div class="idea-hero-info">
+      <div class="hero-cat">{{ idea.category }}</div>
+      <h1 class="hero-title">{{ idea.title }}</h1>
+      <p class="hero-summary">{{ idea.summary }}</p>
+
+      <div class="funding-snapshot">
+        <div class="snap-item">
+          <span class="snap-label">Funding Goal</span>
+          <span class="snap-value">{{ idea.currency }} {{ "{:,.0f}".format(idea.funding_goal) }}</span>
+        </div>
+        <div class="snap-item">
+          <span class="snap-label">Raised</span>
+          <span class="snap-value raised">{{ idea.currency }} {{ "{:,.0f}".format(stats.total_raised) }}</span>
+        </div>
+        <div class="snap-item">
+          <span class="snap-label">Equity</span>
+          <span class="snap-value">{{ idea.equity_offered }}%</span>
+        </div>
+        <div class="snap-item">
+          <span class="snap-label">Investors</span>
+          <span class="snap-value">{{ stats.investor_count }}</span>
+        </div>
+      </div>
+      <div class="fp-track-lg">
+        <!-- FIXED: Removed dynamic Jinja syntax from style attribute to eliminate IDE validation errors -->
+        <div class="fp-fill-lg" id="fundingProgressBar" data-progress="{{ stats.progress }}"></div>
+      </div>
+      <div class="fp-meta-lg">
+        <span>{{ stats.progress }}% funded</span>
+        <span>{{ idea.expected_timeline }}</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Details Sections -->
+  <div class="details-grid">
+    <!-- Left Column -->
+    <div class="details-left">
+
+      <!-- Startup Info -->
+      <div class="detail-section">
+        <h3 class="ds-title"><i class="fas fa-info-circle"></i> Startup Information</h3>
+        <div class="ds-item"><div class="ds-label">Current Status</div><div class="ds-value">{{ idea.current_status }}</div></div>
+        <div class="ds-item full"><div class="ds-label">Problem Statement</div><div class="ds-value">{{ idea.problem_statement }}</div></div>
+        <div class="ds-item full"><div class="ds-label">Proposed Solution</div><div class="ds-value">{{ idea.proposed_solution }}</div></div>
+      </div>
+
+      <!-- Funding Info -->
+      <div class="detail-section">
+        <h3 class="ds-title"><i class="fas fa-money-bill-wave"></i> Funding Information</h3>
+        <div class="ds-grid">
+          <div class="ds-item"><div class="ds-label">Funding Goal</div><div class="ds-value">{{ idea.currency }} {{ "{:,.0f}".format(idea.funding_goal) }}</div></div>
+          <div class="ds-item"><div class="ds-label">Product Stage</div><div class="ds-value">{{ idea.product_stage }}</div></div>
+          <div class="ds-item"><div class="ds-label">Equity Offered</div><div class="ds-value">{{ idea.equity_offered }}%</div></div>
+          <div class="ds-item"><div class="ds-label">Revenue Status</div><div class="ds-value">{{ idea.revenue_status }}</div></div>
+          <div class="ds-item"><div class="ds-label">Expected Timeline</div><div class="ds-value">{{ idea.expected_timeline }}</div></div>
+          {% if idea.monthly_revenue %}
+          <div class="ds-item"><div class="ds-label">Monthly Revenue</div><div class="ds-value">{{ idea.currency }} {{ "{:,.0f}".format(idea.monthly_revenue) }}</div></div>
+          {% endif %}
+          <div class="ds-item full"><div class="ds-label">Funding Usage</div><div class="ds-value">{{ idea.funding_usage }}</div></div>
+        </div>
+
+        {% if existing_investors and existing_investors|length > 0 %}
+        <div class="ds-item full" style="margin-top:10px;">
+          <div class="ds-label">Existing Investors</div>
+          <div class="ds-value">
+            {% for inv in existing_investors %}
+            <div class="investor-chip"><i class="fas fa-user-tie"></i> {{ inv.name }} — {{ idea.currency }} {{ "{:,.0f}".format(inv.amount) }}</div>
+            {% endfor %}
+          </div>
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Intellectual Property -->
+      <div class="detail-section">
+        <h3 class="ds-title"><i class="fas fa-certificate"></i> Intellectual Property</h3>
+        {% if idea.intellectual_property and idea.intellectual_property != 'None' %}
+        <div class="ip-chips">
+          {% for ip in idea.intellectual_property.split(',') %}
+          <span class="ip-chip"><i class="fas fa-check-circle"></i> {{ ip.strip() }}</span>
+          {% endfor %}
+        </div>
+        {% else %}
+        <p class="no-data">No intellectual property registered</p>
+        {% endif %}
+      </div>
+
+      <!-- Product Demo -->
+      {% if idea.product_demo_url %}
+      <div class="detail-section">
+        <h3 class="ds-title"><i class="fas fa-play-circle"></i> Product Demo</h3>
+        {% set youtube_id = '' %}
+        {% if 'youtube.com' in idea.product_demo_url or 'youtu.be' in idea.product_demo_url %}
+        <div class="demo-embed">
+          <iframe
+            src="https://www.youtube.com/embed/{{ idea.product_demo_url.split('v=')[-1].split('&')[0] if 'v=' in idea.product_demo_url else idea.product_demo_url.split('/')[-1] }}"
+            frameborder="0" allowfullscreen title="Product Demo">
+          </iframe>
+        </div>
+        {% else %}
+        <a href="{{ idea.product_demo_url }}" target="_blank" class="demo-link">
+          <i class="fas fa-external-link-alt"></i> View Demo
+        </a>
+        {% endif %}
+      </div>
+      {% endif %}
+
+    </div>
+
+    <!-- Right Column -->
+    <div class="details-right">
+
+      <!-- Meet the Founders -->
+      <div class="detail-section">
+        <h3 class="ds-title"><i class="fas fa-users"></i> Meet the Founders</h3>
+        {% for founder in founders %}
+        <div class="founder-card">
+          <div class="founder-avatar">{{ (founder.name or 'F')[0].upper() }}</div>
+          <div class="founder-info">
+            <div class="founder-name">{{ founder.name }}</div>
+            <div class="founder-role">{{ founder.role }}</div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Terms & Confidential Docs -->
+      <div class="detail-section">
+        <h3 class="ds-title"><i class="fas fa-file-lock"></i> Confidential Documents</h3>
+        <p class="doc-info">These documents are available after accepting our Terms &amp; Conditions.</p>
+        <label class="terms-check-label">
+          <input type="checkbox" id="termsAccepted" onchange="toggleDocs(this)">
+          <span class="checkmark-box"></span>
+          <span>I have read and agree to the <a href="/terms_of_service" target="_blank">Terms &amp; Conditions</a></span>
+        </label>
+
+        <div class="confidential-docs" id="confidentialDocs" style="display:none;">
+          {% if idea.business_plan_path %}
+          <a href="/{{ idea.business_plan_path }}" target="_blank" class="doc-item">
+            <div class="doc-icon"><i class="fas fa-file-pdf"></i></div>
+            <div class="doc-info-text">
+              <span class="doc-name">Business Plan</span>
+              <span class="doc-type">PDF / Document</span>
+            </div>
+            <i class="fas fa-download doc-dl"></i>
+          </a>
+          {% endif %}
+
+          {% for doc in ip_docs %}
+          <a href="/{{ doc }}" target="_blank" class="doc-item">
+            <div class="doc-icon"><i class="fas fa-file-certificate"></i></div>
+            <div class="doc-info-text">
+              <span class="doc-name">IP Document {{ loop.index }}</span>
+              <span class="doc-type">Intellectual Property</span>
+            </div>
+            <i class="fas fa-download doc-dl"></i>
+          </a>
+          {% endfor %}
+
+          {% if idea.product_demo_video_path %}
+          <a href="/{{ idea.product_demo_video_path }}" target="_blank" class="doc-item">
+            <div class="doc-icon"><i class="fas fa-file-video"></i></div>
+            <div class="doc-info-text">
+              <span class="doc-name">Demo Video</span>
+              <span class="doc-type">Video File</span>
+            </div>
+            <i class="fas fa-download doc-dl"></i>
+          </a>
+          {% endif %}
+
+          {% if not idea.business_plan_path and not ip_docs and not idea.product_demo_video_path %}
+          <p class="no-data" style="margin-top:10px;">No confidential documents available.</p>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  // Safely inject progress width via JavaScript to bypass IDE's static CSS validator
+  document.addEventListener("DOMContentLoaded", function() {
+    const progressBar = document.getElementById('fundingProgressBar');
+    if (progressBar) {
+      const progressValue = progressBar.getAttribute('data-progress') || 0;
+      progressBar.style.width = progressValue + '%';
+    }
+  });
+
+  function setMain(thumb) {
+    document.getElementById('mainImg').src = thumb.src;
+    document.querySelectorAll('.gallery-thumbs .thumb').forEach(t => t.classList.remove('active'));
+    thumb.classList.add('active');
+  }
+
+  function toggleDocs(checkbox) {
+    var docs = document.getElementById('confidentialDocs');
+    docs.style.display = checkbox.checked ? 'block' : 'none';
+  }
+</script>
+</body>
+</html>
